@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Budget Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    <style>
+        body {
+            background: #f4f6f9;
+            color: #2c3e50;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            color: #3498db;
+            font-size: 1.5rem;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            padding: 12px 24px;
+            margin: 4px 0;
+        }
+
+        .sidebar-nav li.active {
+            background: #eef7fe;
+            border-left: 4px solid #3498db;
+        }
+
+        .sidebar-nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            color: #3498db;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 24px 40px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            gap: 32px;
+        }        .section-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: transform 0.2s;
+        }
+
+        .section-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #3498db;
+        }
+        /* Accounts */
+        .accounts-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }        .account-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 15px;
+            flex: 1 1 250px;
+            padding: 24px;
+            margin-bottom: 0;
+            min-width: 250px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .account-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .account-balance {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 12px 0;
+        }
+
+        .account-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }        /* Budget Table */
+        .budget-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            table-layout: fixed;
+            background: #fff;
+            color: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .budget-table th, .budget-table td {
+            padding: 18px 12px;
+            text-align: left;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+        .budget-table th {
+            background: #f7fafd;
+            color: #222;
+            font-weight: 700;
+            border-bottom: 2px solid #e6ecf4;
+        }
+        .budget-table td {
+            border-bottom: 1px solid #e6ecf4;
+        }
+        .budget-table tr:last-child td {
+            border-bottom: none;
+        }
+        .budget-category {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #3498db;
+            font-weight: 500;
+        }
+        .budget-table .budget-amount {
+            font-weight: 700;
+            color: #222;
+            width: 120px;
+        }
+        .budget-progress-cell {
+            width: 260px;
+        }
+        .progress-flex {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .progress-bar-bg {
+            background: #e6ecf4;
+            border-radius: 6px;
+            width: 100%;
+            height: 7px;
+            position: relative;
+            flex: 1 1 auto;
+        }
+        .progress-bar {
+            height: 7px;
+            border-radius: 6px;
+            background: #3498db;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .budget-progress-label {
+            font-size: 1rem;
+            color: #222;
+            font-weight: 500;
+            min-width: 40px;
+            text-align: right;
+        }
+        @media (max-width: 900px) {
+            .budget-table th, .budget-table td {
+                font-size: 0.95rem;
+                padding: 12px 6px;
+            }
+            .budget-progress-cell {
+                width: 120px;
+            }
+        }
+        /* Subscriptions & Recurring Payments */        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 10px;
+        }.mini-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 200px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .mini-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .mini-card b {
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .mini-card .overdue {
+            color: #e74c3c;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mini-card .paid {
+            color: #2ecc71;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mini-card .pay-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-top: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+
+        .mini-card .pay-btn:hover:not([disabled]) {
+            background: #2980b9;
+        }
+
+        .mini-card .pay-btn[disabled] {
+            background: #ecf0f1;
+            color: #95a5a6;
+            cursor: not-allowed;
+        }
+        /* Income & Expenses */
+        .tabbed-section {
+            margin-top: 18px;
+        }
+        .tabs {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 12px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #b2b6c0;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border 0.2s;
+        }
+        .tab-btn.active {
+            color: #fff;
+            border-bottom: 2px solid #b36be2;
+        }
+        .income-table, .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1a1b1f;
+            border-radius: 8px;
+        }
+        .income-table th, .income-table td, .expense-table th, .expense-table td {
+            padding: 8px 8px;
+            text-align: left;
+        }
+        .income-table th, .expense-table th {
+            color: #b2b6c0;
+            font-weight: 600;
+            border-bottom: 1.5px solid #35363a;
+        }
+        .income-table tr:not(:last-child) td, .expense-table tr:not(:last-child) td {
+            border-bottom: 1px solid #232329;
+        }        /* Dashboard Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 0;
+        }
+
+        .header-search {
+            position: relative;
+            width: 300px;
+        }
+
+        .header-search input {
+            width: 100%;
+            padding: 12px 20px 12px 40px;
+            border: none;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .header-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .add-transaction-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-transaction-btn:hover {
+            background: #2980b9;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .user-profile span {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .accounts-grid {
+                gap: 15px;
+            }
+            
+            .account-card {
+                flex: 1 1 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-header h3,
+            .sidebar-nav a span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .header-search {
+                width: 200px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-profile span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Budget Tracker</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="active"><a href="#"><i class="fas fa-home"></i>Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i>Analytics</a></li>
+                <li><a href="#"><i class="fas fa-wallet"></i>Transactions</a></li>
+                <li><a href="#"><i class="fas fa-calendar"></i>Calendar</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search transactions...">
+            </div>
+            <div class="header-actions">
+                <button class="add-transaction-btn">
+                    <i class="fas fa-plus"></i> Add Transaction
+                </button>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=User&background=3498db&color=fff" alt="User">
+                    <span>Welcome back!</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Accounts Section -->
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-university"></i> Accounts</div>
+            <div class="accounts-grid">
+                <div class="account-card">
+                    <div class="account-title">Checking</div>
+                    <div class="account-label">Total Balance</div>
+                    <div class="account-balance">$5,964.03</div>
+                </div>
+                <div class="account-card">
+                    <div class="account-title">Savings</div>
+                    <div class="account-label">Total Balance</div>
+                    <div class="account-balance">$9,548.00</div>
+                </div>
+                <div class="account-card">
+                    <div class="account-title">Credit Card</div>
+                    <div class="account-label">Current Balance</div>
+                    <div class="account-balance">-$69.17</div>
+                </div>
+            </div>
+        </div>
+        <!-- Budget Section -->
+        <div class="section-card">
+            <div class="section-title" style="color:#3498db;"><i class="fas fa-wallet"></i> Budget</div>
+            <table class="budget-table">
+                <colgroup>
+                    <col style="width: 260px;">
+                    <col style="width: 120px;">
+                    <col style="width: 260px;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>CATEGORY</th>
+                        <th>BUDGET</th>
+                        <th>BUDGET PROGRESS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-utensils"></i> Food</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-shopping-basket"></i> Groceries</td>
+                        <td class="budget-amount">$400.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:17%"></div></div>
+                                <span class="budget-progress-label">17%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-bus"></i> Transportation</td>
+                        <td class="budget-amount">$300.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-film"></i> Entertainment</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-bolt"></i> Utilities</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-user"></i> Personal Care</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-shopping-cart"></i> Shopping</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="budget-category"><i class="fas fa-plane"></i> Travel</td>
+                        <td class="budget-amount">$0.00</td>
+                        <td class="budget-progress-cell">
+                            <div class="progress-flex">
+                                <div class="progress-bar-bg"><div class="progress-bar" style="width:0%"></div></div>
+                                <span class="budget-progress-label">0%</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Subscriptions Section -->
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-th-large"></i> Subscriptions</div>
+            <div class="card-grid">
+                <div class="mini-card">
+                    <div><b>Hulu</b></div>
+                    <div>Subscription Cost: $11.99</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Renewal Date: May 1, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Hulu</b></div>
+                    <div>$15.00</div>
+                    <div class="overdue">Overdue</div>
+                    <div>April 3, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Netflix</b></div>
+                    <div>Subscription Cost: $10.99</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Renewal Date: April 1, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Hulu</b></div>
+                    <div>$12.00</div>
+                    <div class="paid">Paid</div>
+                    <div>June 21, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Netflix</b></div>
+                    <div>$10.99</div>
+                    <div class="overdue">Overdue</div>
+                    <div>May 1, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+            </div>
+        </div>
+        <!-- Recurring Payments Section -->
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-th-large"></i> Recurring Payments</div>
+            <div class="card-grid">
+                <div class="mini-card">
+                    <div><b>Day Care</b></div>
+                    <div>Cost: $26,342.00</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Next Payment Due: December 13, 2024</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Tuition</b></div>
+                    <div>Cost: $14,625.23</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Next Payment Due: February 6, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Tuition</b></div>
+                    <div>$14,625.23</div>
+                    <div class="paid">Paid</div>
+                    <div>August 17, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Car Payment</b></div>
+                    <div>Cost: $452.00</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Next Payment Due: April 8, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+                <div class="mini-card">
+                    <div><b>Rent</b></div>
+                    <div>Cost: $4,000.00</div>
+                    <div>Payment Status: <span class="overdue">Overdue</span></div>
+                    <div>Next Payment Due: May 1, 2025</div>
+                    <button class="pay-btn" disabled>Pay</button>
+                </div>
+            </div>
+        </div>
+        <!-- Income & Expenses Section -->
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-exchange-alt"></i> Income & Expenses</div>
+            <div class="tabbed-section">
+                <div class="tabs">
+                    <button class="tab-btn active">Income</button>
+                    <button class="tab-btn">Expenses</button>
+                    <button class="tab-btn">Spending Calendar</button>
+                </div>
+                <table class="income-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Accounts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="expense-table" style="margin-top:24px;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Accounts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" checked></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" style="color:#888;">No filter results.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

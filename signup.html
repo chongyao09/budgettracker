@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Budget Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body.signup-bg {
+            background: #e6ecf4;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .signup-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.10);
+            padding: 48px 36px 36px 36px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+        .signup-container h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .signup-form label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .signup-form input {
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #dbe2ef;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .signup-btn {
+            background: #7b2ff2;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .signup-btn:hover {
+            background: #3498db;
+        }
+        .signup-back {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #7b2ff2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .signup-back:hover {
+            color: #3498db;
+        }
+        /* Geometric shapes */
+        .signup-shape.triangle {
+            position: absolute;
+            left: -30px;
+            top: -30px;
+            width: 0; height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 60px solid #ff5e5e;
+            opacity: 0.10;
+            z-index: 1;
+        }
+        .signup-shape.circle {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 50px;
+            height: 50px;
+            background: #00cfff;
+            border-radius: 50%;
+            opacity: 0.10;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="signup-bg">
+    <div class="signup-container">
+        <div class="signup-shape triangle"></div>
+        <div class="signup-shape circle"></div>
+        <h2>Sign Up</h2>
+        <form class="signup-form" method="POST" action="signup.php">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+            <button type="submit" class="signup-btn">Create Account</button>
+        </form>
+        <a href="credential.html" class="signup-back">Already have an account? Sign in</a>
+        <a href="index.html" class="signup-back">&larr; Back to Home</a>
+    </div>
+</body>
+</html> 
