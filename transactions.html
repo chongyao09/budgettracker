@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Transactions - MoneyTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background: #f7fafd;">
+    <div class="transactions-page-container" style="max-width: 900px; margin: 2.5rem auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 2rem 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1 style="margin: 0; font-size: 2rem;">All Transactions</h1>
+            <a href="dashboard.html" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem;">Back to Dashboard</a>
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+            <select id="transaction-period" style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid #eee; font-size: 1rem;">
+                <option value="all">All</option>
+                <option value="this-month">This Month</option>
+                <option value="last-month">Last Month</option>
+                <option value="last-3-months">Last 3 Months</option>
+                <option value="last-6-months">Last 6 Months</option>
+            </select>
+        </div>
+        <div class="transactions-table-wrapper">
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Account</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-table-body">
+                    <!-- Transactions will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let allTransactions = [];
+        function filterTransactionsByPeriod(transactions, period) {
+            const now = new Date();
+            return transactions.filter(tx => {
+                const txDate = new Date(tx.date);
+                if (period === 'this-month') {
+                    return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
+                } else if (period === 'last-month') {
+                    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    return txDate.getMonth() === lastMonth.getMonth() && txDate.getFullYear() === lastMonth.getFullYear();
+                } else if (period === 'last-3-months') {
+                    const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+                    return txDate >= threeMonthsAgo && txDate <= now;
+                } else if (period === 'last-6-months') {
+                    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+                    return txDate >= sixMonthsAgo && txDate <= now;
+                }
+                return true; // 'all'
+            });
+        }
+        function renderTransactionsTable(transactions) {
+            const tableBody = document.getElementById('transactions-table-body');
+            if (tableBody) {
+                tableBody.innerHTML = '';
+                if (transactions.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" class="no-transactions">No transactions found</td></tr>';
+                    return;
+                }
+                let total = 0;
+                transactions.forEach(transaction => {
+                    const date = new Date(transaction.date);
+                    const formattedDate = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    const amountClass = transaction.type === 'income' ? 'amount-income' : 'amount-expense';
+                    const amountSign = transaction.type === 'income' ? '+' : '-';
+                    const absAmount = Math.abs(transaction.amount);
+                    total += (transaction.type === 'income' ? absAmount : -absAmount);
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${formattedDate}</td>
+                            <td>${transaction.description}</td>
+                            <td>${transaction.category}</td>
+                            <td>${transaction.account}</td>
+                            <td>${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
+                            <td class="${amountClass}">${amountSign}$${absAmount.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+                // Add total row
+                const totalClass = total > 0 ? 'amount-income' : (total < 0 ? 'amount-expense' : '');
+                tableBody.innerHTML += `
+                    <tr class="transactions-total-row">
+                        <td colspan="5" style="text-align:right;font-weight:700;">Total</td>
+                        <td class="${totalClass}" style="font-weight:700;">${total >= 0 ? '+' : '-'}$${Math.abs(total).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+        }
+        function loadTransactions() {
+            fetch('get-transactions.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        return;
+                    }
+                    allTransactions = data.transactions;
+                    const period = document.getElementById('transaction-period')?.value || 'all';
+                    renderTransactionsTable(filterTransactionsByPeriod(allTransactions, period));
+                })
+                .catch(error => {
+                    console.error('Error loading transactions:', error);
+                    const tableBody = document.getElementById('transactions-table-body');
+                    if (tableBody) {
+                        tableBody.innerHTML = '<tr><td colspan="6" class="error-message">Error loading transactions. Please try again.</td></tr>';
+                    }
+                });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTransactions();
+            const periodSelect = document.getElementById('transaction-period');
+            if (periodSelect) {
+                periodSelect.addEventListener('change', () => {
+                    renderTransactionsTable(filterTransactionsByPeriod(allTransactions, periodSelect.value));
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

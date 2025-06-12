@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Database config
 $host = 'localhost';
 $db   = 'budgettracker';
@@ -13,21 +14,26 @@ if ($conn->connect_error) {
 
 // Handle POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email']);
+    $email = $_POST['email'];
     $password = $_POST['password'];
 
     // Fetch user by email
-    $stmt = $conn->prepare('SELECT id, password_hash FROM users WHERE email = ?');
+    $stmt = $conn->prepare('SELECT id, email, password_hash FROM users WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    $stmt->store_result();
+    $result = $stmt->get_result();
 
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $password_hash);
-        $stmt->fetch();
-        if (password_verify($password, $password_hash)) {
-            // You can redirect or show a success message here
-            if ($id == 1) { // admin
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password_hash'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['email'] = $user['email'];
+            
+            // Log successful login
+            error_log("User logged in successfully. User ID: " . $user['id']);
+            
+            if ($user['id'] == 1) {
                 header('Location: admin.html');
                 exit();
             } else {
@@ -35,12 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
         } else {
-            echo '<h2>Invalid password.</h2>';
-            echo '<a href="credential.html">Try Again</a>';
+            header('Location: credential.html?error=invalid_password');
+            exit();
         }
     } else {
-        echo '<h2>User not found.</h2>';
-        echo '<a href="credential.html">Try Again</a>';
+        header('Location: credential.html?error=user_not_found');
+        exit();
     }
     $stmt->close();
 } else {

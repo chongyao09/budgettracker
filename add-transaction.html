@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction - MoneyTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .add-transaction-container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            padding: 40px 32px 32px 32px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: #ffa600;
+        }
+        .add-transaction-container h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .add-transaction-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .add-transaction-form label {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .add-transaction-form input,
+        .add-transaction-form select {
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #dbe2ef;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .add-transaction-btn {
+            background: #ffa600;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .add-transaction-btn:hover {
+            background: #ffb733;
+        }
+        @media (max-width: 600px) {
+            .add-transaction-container {
+                padding: 24px 8px 18px 8px;
+            }
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body style="background:#f8fafc;">
+    <div class="add-transaction-container">
+        <button class="close-btn" onclick="window.location.href='dashboard.html'">&times;</button>
+        <h2>Add Transaction</h2>
+        <div id="message"></div>
+        <form class="add-transaction-form" method="POST" action="save-transaction.php" id="transactionForm">
+            <input type="hidden" name="user_id" id="userId">
+            <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" placeholder="e.g. Grocery shopping" required>
+            </div>
+            <div>
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" name="amount" step="0.01" placeholder="e.g. 50.00" required>
+            </div>
+            <div>
+                <label for="type">Type</label>
+                <select id="type" name="type" required>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+            </div>
+            <div>
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="food">Food</option>
+                    <option value="groceries">Groceries</option>
+                    <option value="transport">Transport</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="personal">Personal Care</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="travel">Travel</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label for="account">Account</label>
+                <select id="account" name="account" required>
+                    <option value="checking">Checking</option>
+                    <option value="savings">Savings</option>
+                    <option value="credit">Credit Card</option>
+                </select>
+            </div>
+            <button type="submit" class="add-transaction-btn">Add Transaction</button>
+        </form>
+    </div>
+
+    <script>
+        // Check user session when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('check-session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('userId').value = data.user_id;
+                    } else {
+                        document.getElementById('message').innerHTML = '<div class="error-message">Please log in to add transactions</div>';
+                        document.getElementById('transactionForm').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session:', error);
+                    document.getElementById('message').innerHTML = '<div class="error-message">Error checking login status</div>';
+                });
+        });
+
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Log form data for debugging
+            console.log('Form data being sent:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            // Send data to server
+            fetch('save-transaction.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.text();
+            })
+            .then(data => {
+                console.log('Server response:', data);
+                if (data.includes('success')) {
+                    document.getElementById('message').innerHTML = '<div class="success-message">Transaction saved successfully!</div>';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    document.getElementById('message').innerHTML = '<div class="error-message">Error: ' + data + '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('message').innerHTML = '<div class="error-message">Error saving transaction. Please try again.</div>';
+            });
+        });
+    </script>
+</body>
+</html> 

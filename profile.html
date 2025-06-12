@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - MoneyTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-container {
+            max-width: 420px;
+            margin: 3rem auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 2.5rem 2rem 2rem 2rem;
+        }
+        .profile-container h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .profile-form label {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+        .profile-form input, .profile-form select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 1.2rem;
+            font-size: 1rem;
+            background: #f7f7f7;
+        }
+        .profile-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .profile-form .btn {
+            width: 100%;
+            padding: 0.8rem 0;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+        .profile-form .form-feedback {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        .profile-form .form-feedback.success {
+            color: #2ecc71;
+        }
+        .profile-form .form-feedback.error {
+            color: #e74c3c;
+        }
+        .profile-back {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #ffa600;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .profile-container {
+                padding: 1.2rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body style="background: #f7fafd;">
+    <div class="profile-container">
+        <h1>Profile</h1>
+        <form class="profile-form" id="profileForm" autocomplete="off">
+            <div class="form-feedback" id="formFeedback"></div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" name="current-password" autocomplete="current-password">
+            </div>
+            <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" name="new-password" autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        <a href="dashboard.html" class="profile-back">&larr; Back to Dashboard</a>
+    </div>
+    <script>
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('update-profile.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            const feedback = document.getElementById('formFeedback');
+            feedback.textContent = data.message;
+            feedback.className = 'form-feedback ' + (data.success ? 'success' : 'error');
+            if (data.success) setTimeout(() => { feedback.textContent = ''; }, 2000);
+        });
+    });
+    </script>
+</body>
+</html> 
