@@ -12,10 +12,45 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h1 style="margin: 0; font-size: 2rem;">All Transactions</h1>
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <button onclick="exportToCSV()" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem; background: #ffb733; color: white; border: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 12px rgba(255,183,51,0.2);">
+                <button onclick="toggleExportModal()" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem; background: #ffb733; color: white; border: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 12px rgba(255,183,51,0.2);">
                     <span style="margin-right: 0.5rem;">📊</span> Export to CSV
                 </button>
                 <a href="dashboard.html" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem;">Back to Dashboard</a>
+            </div>
+        </div>
+        
+        <!-- Export Modal -->
+        <div id="exportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 style="margin: 0; font-size: 1.5rem;">Export Transactions</h2>
+                    <button onclick="toggleExportModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Export Option:</label>
+                    <select id="exportOption" onchange="toggleDateRange()" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+                        <option value="current">Export Currently Filtered Transactions</option>
+                        <option value="all">Export All Transactions</option>
+                        <option value="custom">Export Custom Date Range</option>
+                    </select>
+                </div>
+                
+                <div id="dateRangeSection" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f7fafd; border-radius: 8px;">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">From Date:</label>
+                        <input type="date" id="exportStartDate" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">To Date:</label>
+                        <input type="date" id="exportEndDate" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button onclick="toggleExportModal()" style="padding: 0.6rem 1.5rem; border-radius: 6px; border: 1px solid #ddd; background: white; cursor: pointer; font-size: 1rem;">Cancel</button>
+                    <button onclick="performExport()" style="padding: 0.6rem 1.5rem; border-radius: 6px; border: none; background: #ffb733; color: white; cursor: pointer; font-size: 1rem; box-shadow: 0 2px 8px rgba(255,183,51,0.3);">Export CSV</button>
+                </div>
             </div>
         </div>
         <div class="transactions-table-wrapper">
@@ -513,25 +548,112 @@
             return `${year}-${month}-${day}`;
         }
 
-        function exportToCSV() {
-            // Get currently filtered transactions
-            const period = document.getElementById('transaction-period')?.value || 'all';
-            const category = document.getElementById('transaction-category')?.value || 'all';
-            let filtered = applyFilters(allTransactions, period, category);
-            filtered = applyColumnFilters(filtered);
+        // Toggle export modal visibility
+        function toggleExportModal() {
+            const modal = document.getElementById('exportModal');
+            if (modal.style.display === 'none' || modal.style.display === '') {
+                modal.style.display = 'flex';
+                // Set default dates
+                const today = new Date();
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(today.getDate() - 30);
+                
+                document.getElementById('exportEndDate').value = formatDate(today);
+                document.getElementById('exportStartDate').value = formatDate(thirtyDaysAgo);
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Toggle date range section visibility
+        function toggleDateRange() {
+            const exportOption = document.getElementById('exportOption').value;
+            const dateRangeSection = document.getElementById('dateRangeSection');
+            
+            if (exportOption === 'custom') {
+                dateRangeSection.style.display = 'block';
+            } else {
+                dateRangeSection.style.display = 'none';
+            }
+        }
+
+        // Filter transactions by custom date range
+        function filterByDateRange(transactions, startDate, endDate) {
+            const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+            
+            return transactions.filter(tx => {
+                const txDate = new Date(tx.date);
+                return txDate >= start && txDate <= end;
+            });
+        }
+
+        // Perform export based on selected option
+        function performExport() {
+            const exportOption = document.getElementById('exportOption').value;
+            let transactionsToExport = [];
+            let filename = 'transactions';
+
+            if (exportOption === 'current') {
+                // Export currently filtered transactions
+                const period = document.getElementById('transaction-period')?.value || 'all';
+                const category = document.getElementById('transaction-category')?.value || 'all';
+                transactionsToExport = applyFilters(allTransactions, period, category);
+                transactionsToExport = applyColumnFilters(transactionsToExport);
+                filename = 'transactions_filtered';
+            } else if (exportOption === 'all') {
+                // Export all transactions
+                transactionsToExport = allTransactions;
+                filename = 'transactions_all';
+            } else if (exportOption === 'custom') {
+                // Export custom date range
+                const startDate = document.getElementById('exportStartDate').value;
+                const endDate = document.getElementById('exportEndDate').value;
+                
+                if (!startDate || !endDate) {
+                    alert('Please select both start and end dates.');
+                    return;
+                }
+                
+                if (new Date(startDate) > new Date(endDate)) {
+                    alert('Start date must be before or equal to end date.');
+                    return;
+                }
+                
+                transactionsToExport = filterByDateRange(allTransactions, startDate, endDate);
+                filename = `transactions_${startDate}_to_${endDate}`;
+            }
+
+            if (transactionsToExport.length === 0) {
+                alert('No transactions found for the selected criteria.');
+                return;
+            }
+
+            // Calculate total
+            let total = 0;
+            transactionsToExport.forEach(tx => {
+                const amount = Math.abs(tx.amount);
+                total += (tx.type === 'income' ? amount : -amount);
+            });
 
             // Prepare CSV content
             const headers = ['Date', 'Description', 'Category', 'Account', 'Type', 'Amount'];
             const rows = [
                 headers,
-                ...filtered.map(tx => [
+                ...transactionsToExport.map(tx => [
                     formatDate(tx.date),
                     tx.description.includes(',') ? `"${tx.description}"` : tx.description,
                     tx.category,
                     tx.account,
                     tx.type,
                     (tx.type === 'income' ? '' : '-') + Math.abs(tx.amount).toFixed(2)
-                ])
+                ]),
+                // Add empty row for separation
+                ['', '', '', '', '', ''],
+                // Add total row
+                ['', '', '', '', 'TOTAL', (total >= 0 ? '' : '-') + Math.abs(total).toFixed(2)]
             ];
             
             // Convert to CSV string with proper line breaks
@@ -540,13 +662,15 @@
             // Create and trigger download
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
-            const timestamp = new Date().toISOString().slice(0,10);
             link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', `transactions_${timestamp}.csv`);
+            link.setAttribute('download', `${filename}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+
+            // Close modal
+            toggleExportModal();
         }
     </script>
 </body>
-</html> 
+</html>
