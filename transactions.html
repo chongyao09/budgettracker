@@ -8,30 +8,105 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="background: #f7fafd;">
-    <div class="transactions-page-container" style="max-width: 900px; margin: 2.5rem auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 2rem 1.5rem;">
+    <div class="transactions-page-container" style="max-width: 1400px; margin: 2.5rem auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 2rem 1.5rem;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h1 style="margin: 0; font-size: 2rem;">All Transactions</h1>
-            <a href="dashboard.html" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem;">Back to Dashboard</a>
-        </div>
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-            <select id="transaction-period" style="padding: 0.4rem 1rem; border-radius: 6px; border: 1px solid #eee; font-size: 1rem;">
-                <option value="all">All</option>
-                <option value="this-month">This Month</option>
-                <option value="last-month">Last Month</option>
-                <option value="last-3-months">Last 3 Months</option>
-                <option value="last-6-months">Last 6 Months</option>
-            </select>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button onclick="exportToCSV()" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem; background: #ffb733; color: white; border: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 12px rgba(255,183,51,0.2);">
+                    <span style="margin-right: 0.5rem;">📊</span> Export to CSV
+                </button>
+                <a href="dashboard.html" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem;">Back to Dashboard</a>
+            </div>
         </div>
         <div class="transactions-table-wrapper">
             <table class="transactions-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Account</th>
-                        <th>Type</th>
-                        <th>Amount</th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <span>Date</span>
+                                <select class="column-filter" data-column="date">
+                                    <option value="">All Dates</option>
+                                    <option value="today">Today</option>
+                                    <option value="yesterday">Yesterday</option>
+                                    <option value="this-week">This Week</option>
+                                    <option value="last-week">Last Week</option>
+                                    <option value="this-month">This Month</option>
+                                    <option value="last-month">Last Month</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <span>Description</span>
+                                <input type="text" class="column-filter" data-column="description" placeholder="Search description...">
+                            </div>
+                        </th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <span>Category</span>
+                                <select class="column-filter" data-column="category">
+                                    <option value="">All Categories</option>
+                                    <option value="food">🍽️ Food</option>
+                                    <option value="groceries">🛒 Groceries</option>
+                                    <option value="transport">🚗 Transport</option>
+                                    <option value="entertainment">🎬 Entertainment</option>
+                                    <option value="utilities">⚡ Utilities</option>
+                                    <option value="personal">💄 Personal Care</option>
+                                    <option value="shopping">🛍️ Shopping</option>
+                                    <option value="travel">✈️ Travel</option>
+                                    <option value="other">📦 Other</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <span>Account</span>
+                                <select class="column-filter" data-column="account">
+                                    <option value="">All Accounts</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <span>Type</span>
+                                <select class="column-filter" data-column="type">
+                                    <option value="">All Types</option>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                </select>
+                            </div>
+                        </th>
+                        <th class="filterable-header">
+                            <div class="header-content">
+                                <div class="amount-header-row">
+                                    <span>Amount</span>
+                                    <button class="amount-filter-toggle" id="amount-filter-toggle" title="Toggle Amount Filter">
+                                        <span class="toggle-icon">⚙️</span>
+                                    </button>
+                                </div>
+                                <div class="amount-filter-group" id="amount-filter-group" style="display: none;">
+                                    <div class="range-slider-container">
+                                        <div class="range-labels">
+                                            <span class="range-label min-label">Min</span>
+                                            <span class="range-label max-label">Max</span>
+                                        </div>
+                                        <div class="dual-handle-wrapper">
+                                            <div class="dual-handle-slider" id="dual-range-slider">
+                                                <div class="range-track"></div>
+                                                <div class="range-progress" id="range-progress"></div>
+                                                <div class="range-handle min-handle" id="min-handle"></div>
+                                                <div class="range-handle max-handle" id="max-handle"></div>
+                                            </div>
+                                        </div>
+                                        <div class="range-values">
+                                            <span class="range-value min-value" id="min-value">$0</span>
+                                            <span class="range-value max-value" id="max-value">$10,000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody id="transactions-table-body">
@@ -60,6 +135,95 @@
                 }
                 return true; // 'all'
             });
+        }
+        
+        function filterTransactionsByCategory(transactions, category) {
+            if (category === 'all') {
+                return transactions;
+            }
+            return transactions.filter(tx => tx.category === category);
+        }
+        
+        function applyFilters(transactions, period, category) {
+            let filtered = filterTransactionsByPeriod(transactions, period);
+            filtered = filterTransactionsByCategory(filtered, category);
+            return filtered;
+        }
+
+        function applyColumnFilters(transactions) {
+            let filtered = [...transactions];
+            
+            // Date filter
+            const dateFilter = document.querySelector('[data-column="date"]')?.value;
+            if (dateFilter) {
+                const now = new Date();
+                filtered = filtered.filter(tx => {
+                    const txDate = new Date(tx.date);
+                    switch (dateFilter) {
+                        case 'today':
+                            return txDate.toDateString() === now.toDateString();
+                        case 'yesterday':
+                            const yesterday = new Date(now);
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            return txDate.toDateString() === yesterday.toDateString();
+                        case 'this-week':
+                            const startOfWeek = new Date(now);
+                            startOfWeek.setDate(now.getDate() - now.getDay());
+                            return txDate >= startOfWeek;
+                        case 'last-week':
+                            const lastWeekStart = new Date(now);
+                            lastWeekStart.setDate(now.getDate() - now.getDay() - 7);
+                            const lastWeekEnd = new Date(now);
+                            lastWeekEnd.setDate(now.getDate() - now.getDay());
+                            return txDate >= lastWeekStart && txDate < lastWeekEnd;
+                        case 'this-month':
+                            return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
+                        case 'last-month':
+                            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                            return txDate.getMonth() === lastMonth.getMonth() && txDate.getFullYear() === lastMonth.getFullYear();
+                        default:
+                            return true;
+                    }
+                });
+            }
+
+            // Description filter
+            const descriptionFilter = document.querySelector('[data-column="description"]')?.value?.toLowerCase();
+            if (descriptionFilter) {
+                filtered = filtered.filter(tx => 
+                    tx.description.toLowerCase().includes(descriptionFilter)
+                );
+            }
+
+            // Category filter
+            const categoryFilter = document.querySelector('[data-column="category"]')?.value;
+            if (categoryFilter) {
+                filtered = filtered.filter(tx => tx.category === categoryFilter);
+            }
+
+            // Account filter
+            const accountFilter = document.querySelector('[data-column="account"]')?.value;
+            if (accountFilter) {
+                filtered = filtered.filter(tx => tx.account === accountFilter);
+            }
+
+            // Type filter
+            const typeFilter = document.querySelector('[data-column="type"]')?.value;
+            if (typeFilter) {
+                filtered = filtered.filter(tx => tx.type === typeFilter);
+            }
+
+            // Amount range filter (min and max)
+            const minValue = parseFloat(document.getElementById('min-handle')?.dataset.value || 0);
+            const maxValue = parseFloat(document.getElementById('max-handle')?.dataset.value || 10000);
+            if (minValue > 0 || maxValue < 10000) {
+                filtered = filtered.filter(tx => {
+                    const amount = Math.abs(tx.amount);
+                    return amount >= minValue && amount <= maxValue;
+                });
+            }
+
+            return filtered;
         }
         function renderTransactionsTable(transactions) {
             const tableBody = document.getElementById('transactions-table-body');
@@ -111,8 +275,22 @@
                         return;
                     }
                     allTransactions = data.transactions;
+                    
+                    // Populate account filter with unique accounts
+                    const accountSelect = document.querySelector('[data-column="account"]');
+                    if (accountSelect) {
+                        const uniqueAccounts = [...new Set(allTransactions.map(tx => tx.account))];
+                        accountSelect.innerHTML = '<option value="">All Accounts</option>';
+                        uniqueAccounts.forEach(account => {
+                            accountSelect.innerHTML += `<option value="${account}">${account}</option>`;
+                        });
+                    }
+                    
                     const period = document.getElementById('transaction-period')?.value || 'all';
-                    renderTransactionsTable(filterTransactionsByPeriod(allTransactions, period));
+                    const category = document.getElementById('transaction-category')?.value || 'all';
+                    let filtered = applyFilters(allTransactions, period, category);
+                    filtered = applyColumnFilters(filtered);
+                    renderTransactionsTable(filtered);
                 })
                 .catch(error => {
                     console.error('Error loading transactions:', error);
@@ -122,15 +300,253 @@
                     }
                 });
         }
+        function updateFilters() {
+            const period = document.getElementById('transaction-period')?.value || 'all';
+            const category = document.getElementById('transaction-category')?.value || 'all';
+            let filtered = applyFilters(allTransactions, period, category);
+            filtered = applyColumnFilters(filtered);
+            renderTransactionsTable(filtered);
+        }
+        
+        function resetFilters() {
+            document.getElementById('transaction-period').value = 'all';
+            document.getElementById('transaction-category').value = 'all';
+            
+            // Reset all column filters
+            document.querySelectorAll('.column-filter').forEach(filter => {
+                if (filter.type === 'text' || filter.type === 'number') {
+                    filter.value = '';
+                } else if (filter.tagName === 'SELECT') {
+                    filter.value = '';
+                }
+            });
+            
+            // Reset dual-handle slider
+            resetDualHandleSlider();
+            
+            renderTransactionsTable(allTransactions);
+        }
+
+        // Dual Handle Slider Variables
+        let isDragging = false;
+        let activeHandle = null;
+        let sliderRect = null;
+        const minValue = 0;
+        const maxValue = 10000;
+        const step = 10;
+
+        function initDualHandleSlider() {
+            const slider = document.getElementById('dual-range-slider');
+            const minHandle = document.getElementById('min-handle');
+            const maxHandle = document.getElementById('max-handle');
+            const progress = document.getElementById('range-progress');
+            
+            if (!slider || !minHandle || !maxHandle || !progress) return;
+
+            // Set initial values
+            minHandle.dataset.value = minValue;
+            maxHandle.dataset.value = maxValue;
+            minHandle.style.left = '0%';
+            maxHandle.style.left = '100%';
+            updateProgress();
+            updateRangeDisplay();
+
+            // Add event listeners
+            [minHandle, maxHandle].forEach(handle => {
+                handle.addEventListener('mousedown', startDrag);
+                handle.addEventListener('touchstart', startDrag);
+            });
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            activeHandle = e.target;
+            activeHandle.classList.add('active');
+            sliderRect = document.getElementById('dual-range-slider').getBoundingClientRect();
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            if (!isDragging || !activeHandle) return;
+
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const x = clientX - sliderRect.left;
+            const percentage = Math.max(0, Math.min(100, (x / sliderRect.width) * 100));
+            
+            const value = Math.round((percentage / 100) * (maxValue - minValue) + minValue);
+            const steppedValue = Math.round(value / step) * step;
+            
+            if (activeHandle.id === 'min-handle') {
+                const maxHandle = document.getElementById('max-handle');
+                const maxVal = parseFloat(maxHandle.dataset.value);
+                const newValue = Math.min(steppedValue, maxVal - step);
+                activeHandle.dataset.value = newValue;
+                activeHandle.style.left = `${((newValue - minValue) / (maxValue - minValue)) * 100}%`;
+            } else {
+                const minHandle = document.getElementById('min-handle');
+                const minVal = parseFloat(minHandle.dataset.value);
+                const newValue = Math.max(steppedValue, minVal + step);
+                activeHandle.dataset.value = newValue;
+                activeHandle.style.left = `${((newValue - minValue) / (maxValue - minValue)) * 100}%`;
+            }
+            
+            updateProgress();
+            updateRangeDisplay();
+            updateFilters();
+        }
+
+        function endDrag() {
+            if (isDragging && activeHandle) {
+                activeHandle.classList.remove('active');
+            }
+            isDragging = false;
+            activeHandle = null;
+        }
+
+        function updateProgress() {
+            const minHandle = document.getElementById('min-handle');
+            const maxHandle = document.getElementById('max-handle');
+            const progress = document.getElementById('range-progress');
+            
+            if (!minHandle || !maxHandle || !progress) return;
+
+            const minPercent = parseFloat(minHandle.style.left);
+            const maxPercent = parseFloat(maxHandle.style.left);
+            
+            progress.style.left = `${minPercent}%`;
+            progress.style.width = `${maxPercent - minPercent}%`;
+        }
+
+        function updateRangeDisplay() {
+            const minHandle = document.getElementById('min-handle');
+            const maxHandle = document.getElementById('max-handle');
+            const minValueDisplay = document.getElementById('min-value');
+            const maxValueDisplay = document.getElementById('max-value');
+            
+            if (minHandle && minValueDisplay) {
+                const value = parseFloat(minHandle.dataset.value);
+                minValueDisplay.textContent = `$${value.toLocaleString()}`;
+            }
+            
+            if (maxHandle && maxValueDisplay) {
+                const value = parseFloat(maxHandle.dataset.value);
+                maxValueDisplay.textContent = `$${value.toLocaleString()}`;
+            }
+        }
+
+        function resetDualHandleSlider() {
+            const minHandle = document.getElementById('min-handle');
+            const maxHandle = document.getElementById('max-handle');
+            
+            if (minHandle && maxHandle) {
+                minHandle.dataset.value = minValue;
+                maxHandle.dataset.value = maxValue;
+                minHandle.style.left = '0%';
+                maxHandle.style.left = '100%';
+                updateProgress();
+                updateRangeDisplay();
+            }
+        }
+
+        // Toggle amount filter visibility
+        function toggleAmountFilter() {
+            const amountFilterGroup = document.getElementById('amount-filter-group');
+            const toggleButton = document.getElementById('amount-filter-toggle');
+            const toggleIcon = toggleButton.querySelector('.toggle-icon');
+            
+            if (amountFilterGroup.style.display === 'none') {
+                amountFilterGroup.style.display = 'block';
+                toggleIcon.textContent = '✕';
+                toggleButton.title = 'Hide Amount Filter';
+                // Initialize slider when showing
+                setTimeout(() => {
+                    initDualHandleSlider();
+                }, 100);
+            } else {
+                amountFilterGroup.style.display = 'none';
+                toggleIcon.textContent = '⚙️';
+                toggleButton.title = 'Show Amount Filter';
+                // Reset filters when hiding
+                resetDualHandleSlider();
+                updateFilters();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
             const periodSelect = document.getElementById('transaction-period');
+            const categorySelect = document.getElementById('transaction-category');
+            
             if (periodSelect) {
-                periodSelect.addEventListener('change', () => {
-                    renderTransactionsTable(filterTransactionsByPeriod(allTransactions, periodSelect.value));
-                });
+                periodSelect.addEventListener('change', updateFilters);
+            }
+            if (categorySelect) {
+                categorySelect.addEventListener('change', updateFilters);
+            }
+            
+            // Add event listeners for column filters
+            document.querySelectorAll('.column-filter').forEach(filter => {
+                if (filter.type === 'text' || filter.type === 'number') {
+                    filter.addEventListener('input', updateFilters);
+                } else if (filter.tagName === 'SELECT') {
+                    filter.addEventListener('change', updateFilters);
+                }
+            });
+            
+            // Add toggle button event listener
+            const toggleButton = document.getElementById('amount-filter-toggle');
+            if (toggleButton) {
+                toggleButton.addEventListener('click', toggleAmountFilter);
             }
         });
+
+        function formatDate(date) {
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function exportToCSV() {
+            // Get currently filtered transactions
+            const period = document.getElementById('transaction-period')?.value || 'all';
+            const category = document.getElementById('transaction-category')?.value || 'all';
+            let filtered = applyFilters(allTransactions, period, category);
+            filtered = applyColumnFilters(filtered);
+
+            // Prepare CSV content
+            const headers = ['Date', 'Description', 'Category', 'Account', 'Type', 'Amount'];
+            const rows = [
+                headers,
+                ...filtered.map(tx => [
+                    formatDate(tx.date),
+                    tx.description.includes(',') ? `"${tx.description}"` : tx.description,
+                    tx.category,
+                    tx.account,
+                    tx.type,
+                    (tx.type === 'income' ? '' : '-') + Math.abs(tx.amount).toFixed(2)
+                ])
+            ];
+            
+            // Convert to CSV string with proper line breaks
+            const csvContent = rows.map(row => row.join(',')).join('\r\n');
+
+            // Create and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const timestamp = new Date().toISOString().slice(0,10);
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', `transactions_${timestamp}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 </body>
 </html> 

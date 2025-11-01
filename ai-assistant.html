@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - MoneyTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="image-removebg-preview2.png" alt="MoneyTracker Logo">
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="transactions.html">Transactions</a>
+            <a href="#" class="active">AI Assistant</a>
+        </nav>
+    </aside>
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h1>AI Assistant</h1>
+                <div style="display: flex; align-items: center; gap: 1.2rem;">
+                    <div class="profile-dropdown-wrapper" style="position: relative;">
+                        <div class="profile-icon" id="profileIcon" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #f7f7f7; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer;">
+                            <img src="https://ui-avatars.com/api/?name=U&background=ffa600&color=fff&rounded=true&size=44" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;" />
+                        </div>
+                        <div class="profile-dropdown" id="profileDropdown" style="display: none; position: absolute; top: 54px; right: 0; background: #fff; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); min-width: 160px; z-index: 100;">
+                            <a href="profile.html" class="profile-dropdown-item">Profile</a>
+                            <a href="logout.php" class="profile-dropdown-item" style="color: #e74c3c;">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <section class="ai-assistant-content">
+            <div class="ai-welcome-section">
+                <h2>Welcome to Your AI Financial Assistant</h2>
+                <p>Get personalized financial advice and budget recommendations powered by AI</p>
+            </div>
+            
+            <div class="ai-menu-grid">
+                <div class="ai-menu-card" id="budgetPlanCard">
+                    <div class="ai-menu-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Generate Budget Plan</h3>
+                    <p>Get a personalized budget plan based on your financial data and goals</p>
+                    <button class="ai-menu-btn" onclick="generateBudgetPlan()">Generate Plan</button>
+                </div>
+                
+                <div class="ai-menu-card" id="extraIdeaCard">
+                    <div class="ai-menu-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="#ffa600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Generate Extra Ideas</h3>
+                    <p>Discover creative ways to save money and increase your income</p>
+                    <button class="ai-menu-btn" onclick="generateExtraIdeas()">Get Ideas</button>
+                </div>
+            </div>
+            
+            <div class="ai-results-section" id="aiResults" style="display: none;">
+                <div class="ai-results-header">
+                    <h3>AI Assistant Response</h3>
+                    <button class="close-results-btn" onclick="closeResults()">&times;</button>
+                </div>
+                <div class="ai-results-content" id="aiResultsContent">
+                    <!-- AI response will be displayed here -->
+                </div>
+            </div>
+            
+            <div class="ai-loading" id="aiLoading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>AI is thinking...</p>
+            </div>
+        </section>
+    </main>
+    
+    <style>
+        .ai-assistant-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .ai-welcome-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .ai-welcome-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .ai-welcome-section p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .ai-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .ai-menu-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e8f4f8;
+        }
+        
+        .ai-menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .ai-menu-icon {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .ai-menu-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .ai-menu-card p {
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .ai-menu-btn {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .ai-menu-btn:hover {
+            background: linear-gradient(135deg, #ffb733, #ff8c00);
+            transform: translateY(-2px);
+        }
+        
+        .ai-results-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8f4f8;
+            margin-top: 2rem;
+        }
+        
+        .ai-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .ai-results-header h3 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .close-results-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-results-btn:hover {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .ai-results-content {
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+        
+        .ai-results-content h1, .ai-results-content h2, .ai-results-content h3, .ai-results-content h4 {
+            color: #2c3e50;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ai-results-content h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid #ffa600;
+            padding-bottom: 0.5rem;
+        }
+        
+        .ai-results-content h2 {
+            font-size: 1.5rem;
+            color: #ffa600;
+        }
+        
+        .ai-results-content h3 {
+            font-size: 1.25rem;
+            color: #2ecc71;
+        }
+        
+        .ai-results-content ul, .ai-results-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+        
+        .ai-results-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .ai-results-content p {
+            margin-bottom: 1rem;
+        }
+        
+        .ai-results-content strong {
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .ai-results-content .budget-summary {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+        
+        .ai-results-content .budget-summary h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .ai-results-content .highlight-box {
+            background: #f8f9fa;
+            border-left: 4px solid #ffa600;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .ai-results-content .action-steps {
+            background: #e8f5e8;
+            border: 1px solid #2ecc71;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .ai-results-content .action-steps h4 {
+            color: #27ae60;
+            margin-top: 0;
+        }
+        
+        .ai-results-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ai-results-content th, .ai-results-content td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .ai-results-content th {
+            background: #ffa600;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .ai-results-content tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .ai-results-content .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .ai-results-content .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .ai-results-content .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .ai-results-content .tip {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .ai-results-content .tip::before {
+            content: "💡 ";
+            font-size: 1.2em;
+        }
+        
+        .ai-results-content .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+            margin: 0.5rem 0;
+        }
+        
+        .ai-results-content .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .ai-results-content .metric-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .ai-results-content .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffa600;
+        }
+        
+        .ai-results-content .metric-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        
+        .ai-loading {
+            text-align: center;
+            padding: 3rem;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8f4f8;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ecf0f1;
+            border-top: 4px solid #ffa600;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .ai-loading p {
+            color: #7f8c8d;
+            margin: 0;
+        }
+    </style>
+    
+    <script>
+        let userTransactions = [];
+        
+        // Load user's transaction data
+        async function loadUserData() {
+            try {
+                const response = await fetch('get-transactions.php');
+                const data = await response.json();
+                if (data.transactions) {
+                    userTransactions = data.transactions;
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+        
+        // Generate Budget Plan
+        async function generateBudgetPlan() {
+            showLoading();
+            await loadUserData();
+            
+            try {
+                const response = await fetch('ai-assistant.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'generate_budget_plan',
+                        user_data: {
+                            transactions: userTransactions,
+                            total_income: calculateTotalIncome(),
+                            total_expenses: calculateTotalExpenses(),
+                            balance: calculateBalance()
+                        }
+                    })
+                });
+                
+                const result = await response.json();
+                displayResults(result.response);
+            } catch (error) {
+                console.error('Error generating budget plan:', error);
+                displayResults('Sorry, there was an error generating your budget plan. Please try again.');
+            }
+        }
+        
+        // Generate Extra Ideas
+        async function generateExtraIdeas() {
+            showLoading();
+            await loadUserData();
+            
+            try {
+                const response = await fetch('ai-assistant.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'generate_extra_ideas',
+                        user_data: {
+                            transactions: userTransactions,
+                            total_income: calculateTotalIncome(),
+                            total_expenses: calculateTotalExpenses(),
+                            balance: calculateBalance()
+                        }
+                    })
+                });
+                
+                const result = await response.json();
+                displayResults(result.response);
+            } catch (error) {
+                console.error('Error generating extra ideas:', error);
+                displayResults('Sorry, there was an error generating ideas. Please try again.');
+            }
+        }
+        
+        // Helper functions
+        function calculateTotalIncome() {
+            return userTransactions
+                .filter(tx => tx.type === 'income')
+                .reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
+        }
+        
+        function calculateTotalExpenses() {
+            return userTransactions
+                .filter(tx => tx.type === 'expense')
+                .reduce((sum, tx) => sum + parseFloat(tx.amount), 0);
+        }
+        
+        function calculateBalance() {
+            return calculateTotalIncome() - calculateTotalExpenses();
+        }
+        
+        function showLoading() {
+            document.getElementById('aiLoading').style.display = 'block';
+            document.getElementById('aiResults').style.display = 'none';
+        }
+        
+        function displayResults(content) {
+            document.getElementById('aiLoading').style.display = 'none';
+            document.getElementById('aiResultsContent').innerHTML = content;
+            document.getElementById('aiResults').style.display = 'block';
+        }
+        
+        function closeResults() {
+            document.getElementById('aiResults').style.display = 'none';
+        }
+        
+        // Profile dropdown functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileIcon = document.getElementById('profileIcon');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && profileDropdown) {
+                profileIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (profileDropdown.style.display === 'block') {
+                        profileDropdown.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
