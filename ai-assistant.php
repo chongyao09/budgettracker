@@ -8,6 +8,35 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Check premium status
+require_once 'db.php';
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare('SELECT is_premium FROM users WHERE id = ?');
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    if (!(bool)$user['is_premium']) {
+        http_response_code(403);
+        echo json_encode([
+            'error' => 'Premium subscription required',
+            'message' => 'You need a premium subscription to access AI features. Please upgrade to premium.'
+        ]);
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
+} else {
+    http_response_code(403);
+    echo json_encode(['error' => 'User not found']);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+$stmt->close();
+
 // Include configuration
 require_once 'config.php';
 
@@ -198,6 +227,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'success' => false,
             'error' => $e->getMessage()
         ]);
+    } finally {
+        // Close database connection
+        if (isset($conn)) {
+            $conn->close();
+        }
     }
 } else {
     http_response_code(405);

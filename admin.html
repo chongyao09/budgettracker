@@ -20,13 +20,18 @@
     <main class="dashboard-main">
         <header class="dashboard-header">
             <h1>Admin Dashboard</h1>
-            <div class="profile-dropdown-wrapper">
-                <div class="profile-icon" id="profileIcon">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=ffa600&color=fff&rounded=true&size=44" alt="Profile" />
-                </div>
-                <div class="profile-dropdown" id="profileDropdown">
-                    <a href="#" class="profile-dropdown-item">Profile</a>
-                    <a href="logout.php" class="profile-dropdown-item" style="color: #e74c3c;">Logout</a>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="dark-mode-toggle" aria-label="Switch to dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="profile-dropdown-wrapper">
+                    <div class="profile-icon" id="profileIcon">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=ffa600&color=fff&rounded=true&size=44" alt="Profile" />
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" class="profile-dropdown-item">Profile</a>
+                        <a href="logout.php" class="profile-dropdown-item" style="color: #e74c3c;">Logout</a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -69,5 +74,6 @@
         });
     </script>
     <script src="admin.js"></script>
+    <script src="dark-mode.js"></script>
 </body>
 </html> 

@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Subscription - MoneyTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="image-removebg-preview2.png" alt="MoneyTracker Logo">
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="transactions.html">Transactions</a>
+            <a href="ai-assistant.html">AI Assistant</a>
+            <a href="#" class="active">Premium</a>
+        </nav>
+    </aside>
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h1>Premium Subscription</h1>
+                <div style="display: flex; align-items: center; gap: 1.2rem;">
+                    <button class="dark-mode-toggle" aria-label="Switch to dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="profile-dropdown-wrapper" style="position: relative;">
+                        <div class="profile-icon" id="profileIcon" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #f7f7f7; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer;">
+                            <img src="https://ui-avatars.com/api/?name=U&background=ffa600&color=fff&rounded=true&size=44" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;" />
+                        </div>
+                        <div class="profile-dropdown" id="profileDropdown" style="display: none; position: absolute; top: 54px; right: 0; background: #fff; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); min-width: 160px; z-index: 100;">
+                            <a href="profile.html" class="profile-dropdown-item">Profile</a>
+                            <a href="logout.php" class="profile-dropdown-item" style="color: #e74c3c;">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <section class="premium-content">
+            <div class="premium-hero">
+                <div class="premium-badge">
+                    <i class="fas fa-crown"></i>
+                    <span>Premium</span>
+                </div>
+                <h2>Unlock AI-Powered Financial Insights</h2>
+                <p class="premium-subtitle">Get personalized financial advice and budget recommendations powered by advanced AI</p>
+            </div>
+            
+            <div class="premium-features">
+                <h3>Premium Features</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>AI Budget Planning</h4>
+                        <p>Get personalized budget plans tailored to your financial situation with intelligent recommendations</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Money-Saving Ideas</h4>
+                        <p>Discover creative ways to save money and increase your income with AI-generated suggestions</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Advanced Analytics</h4>
+                        <p>Deep insights into your spending patterns and financial health analysis</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Priority Support</h4>
+                        <p>Get priority customer support and faster response times</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="premium-pricing">
+                <div class="pricing-card" id="premiumCard">
+                    <div class="pricing-header">
+                        <h3>Premium Plan</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">9.99</span>
+                            <span class="period">/month</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features-list">
+                        <li><i class="fas fa-check"></i> Unlimited AI Budget Plans</li>
+                        <li><i class="fas fa-check"></i> Unlimited Money-Saving Ideas</li>
+                        <li><i class="fas fa-check"></i> Advanced Financial Analytics</li>
+                        <li><i class="fas fa-check"></i> Priority Customer Support</li>
+                        <li><i class="fas fa-check"></i> Access to All Premium Features</li>
+                    </ul>
+                    <button class="subscribe-btn" id="subscribeBtn">
+                        <i class="fas fa-crown"></i>
+                        Subscribe Now
+                    </button>
+                    <div id="subscriptionStatus" class="subscription-status" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Payment Modal -->
+        <div id="paymentModal" class="payment-modal" style="display: none;">
+            <div class="payment-modal-content">
+                <div class="payment-modal-header">
+                    <h2>Complete Payment</h2>
+                    <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+                </div>
+                
+                <div class="payment-summary">
+                    <div class="summary-item">
+                        <span>Plan:</span>
+                        <span>Premium Subscription</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Amount:</span>
+                        <span class="summary-amount">$9.99/month</span>
+                    </div>
+                </div>
+                
+                <form id="paymentForm" class="payment-form">
+                    <div class="payment-methods-section">
+                        <h3>Select Payment Method</h3>
+                        <div class="payment-methods-grid">
+                            <label class="payment-method-option">
+                                <input type="radio" name="paymentMethod" value="credit_card" required>
+                                <div class="method-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Credit Card</span>
+                                </div>
+                            </label>
+                            
+                            <label class="payment-method-option">
+                                <input type="radio" name="paymentMethod" value="debit_card" required>
+                                <div class="method-card">
+                                    <i class="fas fa-id-card"></i>
+                                    <span>Debit Card</span>
+                                </div>
+                            </label>
+                            
+                            <label class="payment-method-option">
+                                <input type="radio" name="paymentMethod" value="paypal" required>
+                                <div class="method-card">
+                                    <i class="fab fa-paypal"></i>
+                                    <span>PayPal</span>
+                                </div>
+                            </label>
+                            
+                            <label class="payment-method-option">
+                                <input type="radio" name="paymentMethod" value="touch_n_go" required>
+                                <div class="method-card">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Touch 'n Go</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Credit/Debit Card Form -->
+                    <div id="cardPaymentForm" class="payment-details-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" pattern="[0-9\s]{13,19}">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Expiry Date</label>
+                                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" pattern="[0-9]{2}/[0-9]{2}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" pattern="[0-9]{3,4}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cardholderName">Cardholder Name</label>
+                            <input type="text" id="cardholderName" name="cardholderName" placeholder="John Doe" required>
+                        </div>
+                    </div>
+                    
+                    <!-- PayPal Form -->
+                    <div id="paypalPaymentForm" class="payment-details-form" style="display: none;">
+                        <div class="payment-info-box">
+                            <i class="fab fa-paypal"></i>
+                            <p>You will be redirected to PayPal to complete your payment securely.</p>
+                            <p class="payment-note">After payment confirmation, you will be automatically subscribed to Premium.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Touch 'n Go Form -->
+                    <div id="touchngoPaymentForm" class="payment-details-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="tngPhone">Phone Number</label>
+                            <input type="tel" id="tngPhone" name="tngPhone" placeholder="+60 12-345 6789" pattern="[\d\s\-\+]+" required>
+                            <small class="form-hint">Enter your Touch 'n Go eWallet registered phone number</small>
+                        </div>
+                        <div class="payment-info-box">
+                            <i class="fas fa-mobile-alt"></i>
+                            <p>You will receive a payment request via Touch 'n Go app.</p>
+                            <p class="payment-note">Confirm the payment in your Touch 'n Go app to complete subscription.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-actions">
+                        <button type="button" class="cancel-btn" id="cancelPaymentBtn">Cancel</button>
+                        <button type="submit" class="confirm-payment-btn">
+                            <i class="fas fa-lock"></i>
+                            Confirm Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <style>
+        .premium-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .premium-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+        
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 16px rgba(255, 166, 0, 0.3);
+        }
+        
+        .premium-badge i {
+            font-size: 1.2rem;
+        }
+        
+        .premium-hero h2 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .premium-subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .premium-features {
+            margin-bottom: 3rem;
+        }
+        
+        .premium-features h3 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e8f4f8;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h4 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .premium-pricing {
+            display: flex;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 2px solid #ffa600;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .pricing-header h3 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .currency {
+            font-size: 1.5rem;
+            color: #ffa600;
+            font-weight: 600;
+        }
+        
+        .amount {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        
+        .period {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .pricing-features-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features-list li {
+            padding: 0.75rem 0;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .pricing-features-list li i {
+            color: #2ecc71;
+            font-size: 1.2rem;
+        }
+        
+        .subscribe-btn {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .subscribe-btn:hover {
+            background: linear-gradient(135deg, #ffb733, #ff8c00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 166, 0, 0.4);
+        }
+        
+        .subscribe-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .subscription-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .subscription-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .subscription-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Dark Mode Styles */
+        [data-theme="dark"] .feature-card {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .premium-hero h2 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .premium-subtitle {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .premium-features h3 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .feature-card h4 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .feature-card p {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .pricing-card {
+            background: var(--card-bg);
+            border-color: #ffa600;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .pricing-header h3 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .amount {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .pricing-features-list li {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .profile-icon {
+            background: var(--bg-tertiary) !important;
+        }
+        
+        [data-theme="dark"] .profile-dropdown {
+            background: var(--dropdown-bg) !important;
+            box-shadow: 0 4px 16px var(--shadow-color) !important;
+        }
+        
+        /* Payment Modal Styles */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        
+        .payment-modal-content {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .payment-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 1px solid #e8f4f8;
+        }
+        
+        .payment-modal-header h2 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .close-modal-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal-btn:hover {
+            background: #f0f0f0;
+            color: #2c3e50;
+        }
+        
+        .payment-summary {
+            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e8f4f8;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .summary-item span:first-child {
+            color: #7f8c8d;
+        }
+        
+        .summary-item span:last-child {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .summary-amount {
+            color: #ffa600 !important;
+            font-size: 1.2rem;
+        }
+        
+        .payment-form {
+            padding: 2rem;
+        }
+        
+        .payment-methods-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-method-option {
+            cursor: pointer;
+        }
+        
+        .payment-method-option input[type="radio"] {
+            display: none;
+        }
+        
+        .method-card {
+            background: #fff;
+            border: 2px solid #e8f4f8;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .method-card i {
+            font-size: 2rem;
+            color: #7f8c8d;
+        }
+        
+        .method-card span {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .payment-method-option input[type="radio"]:checked + .method-card {
+            border-color: #ffa600;
+            background: #fffbe6;
+            box-shadow: 0 4px 12px rgba(255, 166, 0, 0.2);
+        }
+        
+        .payment-method-option input[type="radio"]:checked + .method-card i {
+            color: #ffa600;
+        }
+        
+        .payment-details-form {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e8f4f8;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid #e8f4f8;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffa600;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-hint {
+            display: block;
+            color: #7f8c8d;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .payment-info-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #e8f4f8;
+        }
+        
+        .payment-info-box i {
+            font-size: 3rem;
+            color: #ffa600;
+            margin-bottom: 1rem;
+        }
+        
+        .payment-info-box p {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-note {
+            color: #7f8c8d !important;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .payment-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e8f4f8;
+        }
+        
+        .cancel-btn,
+        .confirm-payment-btn {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #2c3e50;
+        }
+        
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .confirm-payment-btn {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+        }
+        
+        .confirm-payment-btn:hover {
+            background: linear-gradient(135deg, #ffb733, #ff8c00);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 166, 0, 0.4);
+        }
+        
+        /* Dark Mode Payment Modal */
+        [data-theme="dark"] .payment-modal-content {
+            background: var(--card-bg);
+        }
+        
+        [data-theme="dark"] .payment-modal-header {
+            border-bottom-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .payment-modal-header h2 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .close-modal-btn {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .close-modal-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .payment-summary {
+            background: var(--bg-tertiary);
+            border-bottom-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .summary-item span:first-child {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .summary-item span:last-child {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .payment-methods-section h3 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .method-card {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .method-card span {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group label {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .form-group input {
+            background: var(--bg-tertiary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .payment-info-box {
+            background: var(--bg-tertiary);
+            border-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .payment-info-box p {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .payment-actions {
+            border-top-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .cancel-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .cancel-btn:hover {
+            background: var(--border-color);
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check premium status on load
+            checkPremiumStatus();
+            
+            // Subscribe button handler
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            subscribeBtn.addEventListener('click', handleSubscription);
+            
+            // Profile dropdown functionality
+            const profileIcon = document.getElementById('profileIcon');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && profileDropdown) {
+                profileIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (profileDropdown.style.display === 'block') {
+                        profileDropdown.style.display = 'none';
+                    }
+                });
+            }
+        });
+        
+        async function checkPremiumStatus() {
+            try {
+                const response = await fetch('check-premium.php');
+                const data = await response.json();
+                
+                if (data.is_premium) {
+                    updateUIForPremium();
+                }
+            } catch (error) {
+                console.error('Error checking premium status:', error);
+            }
+        }
+        
+        function updateUIForPremium() {
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            const statusDiv = document.getElementById('subscriptionStatus');
+            
+            subscribeBtn.disabled = true;
+            subscribeBtn.innerHTML = '<i class="fas fa-check"></i> You are a Premium Member';
+            
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'subscription-status success';
+            statusDiv.innerHTML = '✓ You have access to all premium features!';
+        }
+        
+        function handleSubscription() {
+            // Show payment modal
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+        
+        // Payment method selection handler
+        function setupPaymentMethodHandlers() {
+            const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', (e) => {
+                    const selectedMethod = e.target.value;
+                    
+                    // Hide all payment forms
+                    document.getElementById('cardPaymentForm').style.display = 'none';
+                    document.getElementById('paypalPaymentForm').style.display = 'none';
+                    document.getElementById('touchngoPaymentForm').style.display = 'none';
+                    
+                    // Show relevant form
+                    if (selectedMethod === 'credit_card' || selectedMethod === 'debit_card') {
+                        document.getElementById('cardPaymentForm').style.display = 'block';
+                        // Make card fields required for card payments
+                        document.getElementById('cardNumber').required = true;
+                        document.getElementById('expiryDate').required = true;
+                        document.getElementById('cvv').required = true;
+                    } else if (selectedMethod === 'paypal') {
+                        document.getElementById('paypalPaymentForm').style.display = 'block';
+                    } else if (selectedMethod === 'touch_n_go') {
+                        document.getElementById('touchngoPaymentForm').style.display = 'block';
+                    }
+                });
+            });
+        }
+        
+        // Card number formatting
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            input.value = formattedValue;
+        }
+        
+        // Expiry date formatting
+        function formatExpiryDate(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            input.value = value;
+        }
+        
+        // CVV formatting (numbers only)
+        function formatCVV(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
+        
+        // Handle payment form submission
+        async function handlePaymentSubmission(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const paymentMethod = formData.get('paymentMethod');
+            const confirmBtn = document.querySelector('.confirm-payment-btn');
+            
+            // Validate required fields based on payment method
+            if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardholderName = document.getElementById('cardholderName').value;
+                
+                if (!cardNumber || cardNumber.length < 13 || cardNumber.length > 19) {
+                    alert('Please enter a valid card number');
+                    return;
+                }
+                if (!expiryDate || !/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                    alert('Please enter a valid expiry date (MM/YY)');
+                    return;
+                }
+                if (!cvv || cvv.length < 3) {
+                    alert('Please enter a valid CVV');
+                    return;
+                }
+                if (!cardholderName) {
+                    alert('Please enter the cardholder name');
+                    return;
+                }
+            } else if (paymentMethod === 'touch_n_go') {
+                const phone = document.getElementById('tngPhone').value;
+                if (!phone) {
+                    alert('Please enter your Touch \'n Go phone number');
+                    return;
+                }
+            }
+            
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+            
+            try {
+                const paymentData = {
+                    paymentMethod: paymentMethod,
+                    cardNumber: paymentMethod === 'credit_card' || paymentMethod === 'debit_card' 
+                        ? document.getElementById('cardNumber').value.replace(/\s+/g, '') : null,
+                    expiryDate: paymentMethod === 'credit_card' || paymentMethod === 'debit_card' 
+                        ? document.getElementById('expiryDate').value : null,
+                    cvv: paymentMethod === 'credit_card' || paymentMethod === 'debit_card' 
+                        ? document.getElementById('cvv').value : null,
+                    cardholderName: paymentMethod === 'credit_card' || paymentMethod === 'debit_card' 
+                        ? document.getElementById('cardholderName').value : null,
+                    phone: paymentMethod === 'touch_n_go' 
+                        ? document.getElementById('tngPhone').value : null
+                };
+                
+                const response = await fetch('subscribe.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Close modal
+                    document.getElementById('paymentModal').style.display = 'none';
+                    
+                    // Show success message
+                    const statusDiv = document.getElementById('subscriptionStatus');
+                    statusDiv.style.display = 'block';
+                    statusDiv.className = 'subscription-status success';
+                    statusDiv.innerHTML = '✓ ' + (data.message || 'Successfully subscribed to Premium!');
+                    
+                    // Update UI
+                    updateUIForPremium();
+                    
+                    // Reset form
+                    e.target.reset();
+                    document.getElementById('cardPaymentForm').style.display = 'none';
+                    document.getElementById('paypalPaymentForm').style.display = 'none';
+                    document.getElementById('touchngoPaymentForm').style.display = 'none';
+                } else {
+                    alert(data.message || 'Payment failed. Please try again.');
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerHTML = '<i class="fas fa-lock"></i> Confirm Payment';
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('An error occurred during payment. Please try again.');
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="fas fa-lock"></i> Confirm Payment';
+            }
+        }
+        
+        // Close modal handlers
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('paymentForm').reset();
+            document.getElementById('cardPaymentForm').style.display = 'none';
+            document.getElementById('paypalPaymentForm').style.display = 'none';
+            document.getElementById('touchngoPaymentForm').style.display = 'none';
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check premium status on load
+            checkPremiumStatus();
+            
+            // Subscribe button handler
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            subscribeBtn.addEventListener('click', handleSubscription);
+            
+            // Setup payment method handlers
+            setupPaymentMethodHandlers();
+            
+            // Setup form input formatting
+            const cardNumberInput = document.getElementById('cardNumber');
+            const expiryInput = document.getElementById('expiryDate');
+            const cvvInput = document.getElementById('cvv');
+            
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', () => formatCardNumber(cardNumberInput));
+            }
+            if (expiryInput) {
+                expiryInput.addEventListener('input', () => formatExpiryDate(expiryInput));
+            }
+            if (cvvInput) {
+                cvvInput.addEventListener('input', () => formatCVV(cvvInput));
+            }
+            
+            // Payment form submission
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.addEventListener('submit', handlePaymentSubmission);
+            
+            // Close modal buttons
+            document.getElementById('closeModalBtn').addEventListener('click', closePaymentModal);
+            document.getElementById('cancelPaymentBtn').addEventListener('click', closePaymentModal);
+            
+            // Close modal on outside click
+            document.getElementById('paymentModal').addEventListener('click', (e) => {
+                if (e.target.id === 'paymentModal') {
+                    closePaymentModal();
+                }
+            });
+            
+            // Profile dropdown functionality
+            const profileIcon = document.getElementById('profileIcon');
+            const profileDropdown = document.getElementById('profileDropdown');
+            
+            if (profileIcon && profileDropdown) {
+                profileIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (profileDropdown.style.display === 'block') {
+                        profileDropdown.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="dark-mode.js"></script>
+</body>
+</html>
+

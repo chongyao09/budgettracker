@@ -6,6 +6,7 @@
     <title>AI Assistant - MoneyTracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <aside class="sidebar">
@@ -16,6 +17,7 @@
             <a href="dashboard.html">Dashboard</a>
             <a href="transactions.html">Transactions</a>
             <a href="#" class="active">AI Assistant</a>
+            <a href="premium.html">Premium</a>
         </nav>
     </aside>
     <main class="dashboard-main">
@@ -23,6 +25,9 @@
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <h1>AI Assistant</h1>
                 <div style="display: flex; align-items: center; gap: 1.2rem;">
+                    <button class="dark-mode-toggle" aria-label="Switch to dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
                     <div class="profile-dropdown-wrapper" style="position: relative;">
                         <div class="profile-icon" id="profileIcon" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #f7f7f7; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer;">
                             <img src="https://ui-avatars.com/api/?name=U&background=ffa600&color=fff&rounded=true&size=44" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -37,6 +42,36 @@
         </header>
         
         <section class="ai-assistant-content">
+            <!-- Premium Paywall -->
+            <div id="premiumPaywall" class="premium-paywall" style="display: none;">
+                <div class="paywall-content">
+                    <div class="paywall-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h2>Premium Feature</h2>
+                    <p>AI Assistant is a premium feature. Subscribe to unlock personalized financial advice and budget recommendations powered by AI.</p>
+                    <div class="paywall-features">
+                        <div class="paywall-feature">
+                            <i class="fas fa-check"></i>
+                            <span>AI-Powered Budget Planning</span>
+                        </div>
+                        <div class="paywall-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Money-Saving Ideas</span>
+                        </div>
+                        <div class="paywall-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Personalized Financial Advice</span>
+                        </div>
+                    </div>
+                    <a href="premium.html" class="paywall-btn">
+                        <i class="fas fa-crown"></i>
+                        Upgrade to Premium
+                    </a>
+                </div>
+            </div>
+            
+            <div id="aiContent" class="ai-content-wrapper">
             <div class="ai-welcome-section">
                 <h2>Welcome to Your AI Financial Assistant</h2>
                 <p>Get personalized financial advice and budget recommendations powered by AI</p>
@@ -79,6 +114,7 @@
             <div class="ai-loading" id="aiLoading" style="display: none;">
                 <div class="loading-spinner"></div>
                 <p>AI is thinking...</p>
+            </div>
             </div>
         </section>
     </main>
@@ -412,10 +448,350 @@
             color: #7f8c8d;
             margin: 0;
         }
+        
+        /* Dark Mode Styles */
+        [data-theme="dark"] .ai-welcome-section h2 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-welcome-section p {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .ai-menu-card {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .ai-menu-card:hover {
+            box-shadow: 0 8px 30px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .ai-menu-card h3 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-menu-card p {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .ai-results-section {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .ai-results-header {
+            border-bottom-color: var(--border-color);
+        }
+        
+        [data-theme="dark"] .ai-results-header h3 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .close-results-btn {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .close-results-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-results-content {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-results-content h1,
+        [data-theme="dark"] .ai-results-content h2,
+        [data-theme="dark"] .ai-results-content h3,
+        [data-theme="dark"] .ai-results-content h4 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-results-content h1 {
+            border-bottom-color: #ffa600;
+            color: #ffa600;
+        }
+        
+        [data-theme="dark"] .ai-results-content h2 {
+            color: #ffa600;
+        }
+        
+        [data-theme="dark"] .ai-results-content h3 {
+            color: #4ade80;
+        }
+        
+        [data-theme="dark"] .ai-results-content h4 {
+            color: #ffa600;
+        }
+        
+        [data-theme="dark"] .ai-results-content p {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-results-content strong {
+            color: #ffb733;
+            background: rgba(255, 166, 0, 0.2);
+            padding: 0.15rem 0.3rem;
+            border-radius: 4px;
+        }
+        
+        [data-theme="dark"] .ai-results-content ul,
+        [data-theme="dark"] .ai-results-content ol {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .ai-results-content li {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        [data-theme="dark"] .ai-results-content em {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .ai-results-content .highlight-box {
+            background: var(--bg-tertiary);
+            border-left-color: #ffa600;
+        }
+        
+        [data-theme="dark"] .ai-results-content .action-steps {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: #2ecc71;
+        }
+        
+        [data-theme="dark"] .ai-results-content .action-steps h4 {
+            color: #4ade80;
+        }
+        
+        [data-theme="dark"] .ai-results-content table {
+            background: var(--card-bg);
+            box-shadow: 0 2px 8px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        [data-theme="dark"] .ai-results-content th {
+            background: linear-gradient(135deg, #ffa600, #ff8c00);
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        [data-theme="dark"] .ai-results-content td {
+            border-bottom-color: var(--border-color);
+            color: var(--text-primary);
+            background: var(--card-bg);
+        }
+        
+        [data-theme="dark"] .ai-results-content tr:hover {
+            background: rgba(255, 166, 0, 0.1);
+        }
+        
+        [data-theme="dark"] .ai-results-content td strong {
+            background: transparent;
+            padding: 0;
+            color: #ffb733;
+        }
+        
+        [data-theme="dark"] .ai-results-content .success-box {
+            background: rgba(46, 204, 113, 0.15);
+            border-color: #2ecc71;
+            color: #4ade80;
+        }
+        
+        [data-theme="dark"] .ai-results-content .warning-box {
+            background: rgba(255, 166, 0, 0.15);
+            border-color: #ffa600;
+            color: #ffb733;
+        }
+        
+        [data-theme="dark"] .ai-results-content .info-box {
+            background: rgba(13, 110, 253, 0.15);
+            border-color: #0d6efd;
+            color: #6ea8fe;
+        }
+        
+        [data-theme="dark"] .ai-results-content .tip {
+            background: rgba(0, 123, 255, 0.1);
+            border-left-color: #007bff;
+        }
+        
+        [data-theme="dark"] .ai-results-content .progress-bar {
+            background: var(--bg-tertiary);
+        }
+        
+        [data-theme="dark"] .ai-results-content .metric-card {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .ai-results-content .metric-label {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .ai-loading {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .ai-loading p {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .loading-spinner {
+            border-color: var(--border-color);
+            border-top-color: #ffa600;
+        }
+        
+        [data-theme="dark"] .profile-icon {
+            background: var(--bg-tertiary) !important;
+        }
+        
+        [data-theme="dark"] .profile-dropdown {
+            background: var(--dropdown-bg) !important;
+            box-shadow: 0 4px 16px var(--shadow-color) !important;
+        }
+        
+        /* Premium Paywall Styles */
+        .premium-paywall {
+            background: #fff;
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 2px solid #ffa600;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        
+        .paywall-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 3rem;
+            box-shadow: 0 4px 20px rgba(255, 166, 0, 0.3);
+        }
+        
+        .paywall-content h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .paywall-content p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .paywall-features {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .paywall-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            color: #2c3e50;
+        }
+        
+        .paywall-feature i {
+            color: #2ecc71;
+            font-size: 1.2rem;
+        }
+        
+        .paywall-btn {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(255, 166, 0, 0.3);
+        }
+        
+        .paywall-btn:hover {
+            background: linear-gradient(135deg, #ffb733, #ff8c00);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 166, 0, 0.4);
+        }
+        
+        [data-theme="dark"] .premium-paywall {
+            background: var(--card-bg);
+            border-color: #ffa600;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+        
+        [data-theme="dark"] .paywall-content h2 {
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .paywall-content p {
+            color: var(--text-secondary);
+        }
+        
+        [data-theme="dark"] .paywall-features {
+            background: var(--bg-tertiary);
+        }
+        
+        [data-theme="dark"] .paywall-feature {
+            color: var(--text-primary);
+        }
     </style>
     
     <script>
         let userTransactions = [];
+        let isPremium = false;
+        
+        // Check premium status on page load
+        async function checkPremiumStatus() {
+            try {
+                const response = await fetch('check-premium.php');
+                const data = await response.json();
+                isPremium = data.is_premium || false;
+                
+                if (!isPremium) {
+                    showPaywall();
+                } else {
+                    hidePaywall();
+                }
+            } catch (error) {
+                console.error('Error checking premium status:', error);
+                // If check fails, show paywall to be safe
+                showPaywall();
+            }
+        }
+        
+        function showPaywall() {
+            document.getElementById('premiumPaywall').style.display = 'block';
+            document.getElementById('aiContent').style.display = 'none';
+        }
+        
+        function hidePaywall() {
+            document.getElementById('premiumPaywall').style.display = 'none';
+            document.getElementById('aiContent').style.display = 'block';
+        }
         
         // Load user's transaction data
         async function loadUserData() {
@@ -432,6 +808,12 @@
         
         // Generate Budget Plan
         async function generateBudgetPlan() {
+            if (!isPremium) {
+                alert('Please upgrade to Premium to access AI features.');
+                window.location.href = 'premium.html';
+                return;
+            }
+            
             showLoading();
             await loadUserData();
             
@@ -453,6 +835,13 @@
                 });
                 
                 const result = await response.json();
+                
+                if (result.error && result.error === 'Premium subscription required') {
+                    alert(result.message || 'Premium subscription required');
+                    window.location.href = 'premium.html';
+                    return;
+                }
+                
                 displayResults(result.response);
             } catch (error) {
                 console.error('Error generating budget plan:', error);
@@ -462,6 +851,12 @@
         
         // Generate Extra Ideas
         async function generateExtraIdeas() {
+            if (!isPremium) {
+                alert('Please upgrade to Premium to access AI features.');
+                window.location.href = 'premium.html';
+                return;
+            }
+            
             showLoading();
             await loadUserData();
             
@@ -483,6 +878,13 @@
                 });
                 
                 const result = await response.json();
+                
+                if (result.error && result.error === 'Premium subscription required') {
+                    alert(result.message || 'Premium subscription required');
+                    window.location.href = 'premium.html';
+                    return;
+                }
+                
                 displayResults(result.response);
             } catch (error) {
                 console.error('Error generating extra ideas:', error);
@@ -524,6 +926,9 @@
         
         // Profile dropdown functionality
         document.addEventListener('DOMContentLoaded', () => {
+            // Check premium status first
+            checkPremiumStatus();
+            
             const profileIcon = document.getElementById('profileIcon');
             const profileDropdown = document.getElementById('profileDropdown');
             
@@ -541,5 +946,6 @@
             }
         });
     </script>
+    <script src="dark-mode.js"></script>
 </body>
 </html>

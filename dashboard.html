@@ -6,6 +6,7 @@
     <title>Dashboard - MoneyTracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -17,6 +18,7 @@
             <a href="#" class="active">Dashboard</a>
             <a href="transactions.html">Transactions</a>
             <a href="ai-assistant.html">AI Assistant</a>
+            <a href="premium.html">Premium</a>
         </nav>
     </aside>
     <main class="dashboard-main">
@@ -24,6 +26,9 @@
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <h1>Dashboard</h1>
                 <div style="display: flex; align-items: center; gap: 1.2rem; margin-left: auto;">
+                    <button class="dark-mode-toggle" aria-label="Switch to dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
                     <a href="add-transaction.html" class="btn btn-primary add-transaction-link">Add Transaction</a>
                     <div class="profile-dropdown-wrapper" style="position: relative;">
                         <div class="profile-icon" id="profileIcon" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #f7f7f7; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer;">
@@ -160,6 +165,30 @@
                         expenseData.push(grouped[label] ? grouped[label].expense : 0);
                     });
 
+                    // Helper function to get chart colors based on theme
+                    function getChartColors() {
+                        const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+                        if (isDarkMode) {
+                            // More saturated colors for dark mode
+                            return {
+                                incomeBorder: '#00ff88',
+                                incomeBg: 'rgba(0, 255, 136, 0.25)',
+                                expenseBorder: '#ff4444',
+                                expenseBg: 'rgba(255, 68, 68, 0.25)'
+                            };
+                        } else {
+                            // Standard colors for light mode
+                            return {
+                                incomeBorder: '#2ecc71',
+                                incomeBg: 'rgba(46,204,113,0.08)',
+                                expenseBorder: '#e74c3c',
+                                expenseBg: 'rgba(231,76,60,0.08)'
+                            };
+                        }
+                    }
+
+                    const chartColors = getChartColors();
+
                     // Draw Chart.js graph
                     if (window.analyticsChart && typeof window.analyticsChart.destroy === 'function') window.analyticsChart.destroy();
                     const ctx = document.getElementById('analyticsChart').getContext('2d');
@@ -171,8 +200,8 @@
                                 {
                                     label: 'Income',
                                     data: incomeData,
-                                    borderColor: '#2ecc71',
-                                    backgroundColor: 'rgba(46,204,113,0.08)',
+                                    borderColor: chartColors.incomeBorder,
+                                    backgroundColor: chartColors.incomeBg,
                                     tension: 0.4,
                                     fill: true,
                                     pointRadius: 2,
@@ -181,8 +210,8 @@
                                 {
                                     label: 'Expenses',
                                     data: expenseData,
-                                    borderColor: '#e74c3c',
-                                    backgroundColor: 'rgba(231,76,60,0.08)',
+                                    borderColor: chartColors.expenseBorder,
+                                    backgroundColor: chartColors.expenseBg,
                                     tension: 0.4,
                                     fill: true,
                                     pointRadius: 2,
@@ -192,8 +221,52 @@
                         },
                         options: {
                             responsive: true,
-                            plugins: { legend: { display: true } },
-                            scales: { y: { beginAtZero: true } },
+                            plugins: { 
+                                legend: { 
+                                    display: true,
+                                    labels: {
+                                        color: document.documentElement.getAttribute('data-theme') === 'dark' ? '#fff' : '#333'
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                        ? 'rgba(45, 45, 45, 0.95)' 
+                                        : 'rgba(255, 255, 255, 0.95)',
+                                    titleColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#fff' : '#333',
+                                    bodyColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#fff' : '#333',
+                                    borderColor: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                        ? 'rgba(255, 255, 255, 0.2)' 
+                                        : 'rgba(0, 0, 0, 0.1)',
+                                    borderWidth: 1
+                                }
+                            },
+                            scales: { 
+                                y: { 
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.1)' 
+                                            : 'rgba(0, 0, 0, 0.05)'
+                                    },
+                                    ticks: {
+                                        color: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.7)' 
+                                            : 'rgba(0, 0, 0, 0.7)'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        color: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.1)' 
+                                            : 'rgba(0, 0, 0, 0.05)'
+                                    },
+                                    ticks: {
+                                        color: document.documentElement.getAttribute('data-theme') === 'dark' 
+                                            ? 'rgba(255, 255, 255, 0.7)' 
+                                            : 'rgba(0, 0, 0, 0.7)'
+                                    }
+                                }
+                            },
                             animation: {
                                 duration: 800, // 0.8s animation
                                 easing: 'easeOutQuart'
@@ -213,6 +286,74 @@
                     }
                 });
         }
+
+        // Function to update chart colors based on current theme
+        function updateChartColors() {
+            if (!window.analyticsChart) return;
+            
+            const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+            const chartColors = (() => {
+                if (isDarkMode) {
+                    return {
+                        incomeBorder: '#00ff88',
+                        incomeBg: 'rgba(0, 255, 136, 0.25)',
+                        expenseBorder: '#ff4444',
+                        expenseBg: 'rgba(255, 68, 68, 0.25)'
+                    };
+                } else {
+                    return {
+                        incomeBorder: '#2ecc71',
+                        incomeBg: 'rgba(46,204,113,0.08)',
+                        expenseBorder: '#e74c3c',
+                        expenseBg: 'rgba(231,76,60,0.08)'
+                    };
+                }
+            })();
+
+            // Update dataset colors
+            window.analyticsChart.data.datasets[0].borderColor = chartColors.incomeBorder;
+            window.analyticsChart.data.datasets[0].backgroundColor = chartColors.incomeBg;
+            window.analyticsChart.data.datasets[1].borderColor = chartColors.expenseBorder;
+            window.analyticsChart.data.datasets[1].backgroundColor = chartColors.expenseBg;
+
+            // Update scale colors
+            const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+            const tickColor = isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)';
+            
+            window.analyticsChart.options.scales.y.grid.color = gridColor;
+            window.analyticsChart.options.scales.y.ticks.color = tickColor;
+            window.analyticsChart.options.scales.x.grid.color = gridColor;
+            window.analyticsChart.options.scales.x.ticks.color = tickColor;
+
+            // Update legend and tooltip for dark mode
+            if (isDarkMode) {
+                window.analyticsChart.options.plugins.legend.labels.color = '#fff';
+                window.analyticsChart.options.plugins.tooltip.backgroundColor = 'rgba(45, 45, 45, 0.95)';
+                window.analyticsChart.options.plugins.tooltip.titleColor = '#fff';
+                window.analyticsChart.options.plugins.tooltip.bodyColor = '#fff';
+                window.analyticsChart.options.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.2)';
+                window.analyticsChart.options.plugins.tooltip.borderWidth = 1;
+            } else {
+                window.analyticsChart.options.plugins.legend.labels.color = '#333';
+                window.analyticsChart.options.plugins.tooltip.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                window.analyticsChart.options.plugins.tooltip.titleColor = '#333';
+                window.analyticsChart.options.plugins.tooltip.bodyColor = '#333';
+                window.analyticsChart.options.plugins.tooltip.borderColor = 'rgba(0, 0, 0, 0.1)';
+                window.analyticsChart.options.plugins.tooltip.borderWidth = 1;
+            }
+
+            window.analyticsChart.update('none'); // Update without animation
+        }
+
+        // Listen for theme changes
+        const themeObserver = new MutationObserver(() => {
+            updateChartColors();
+        });
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             loadTransactions();
             const periodSelect = document.getElementById('transaction-period');
@@ -236,5 +377,6 @@
             }
         });
     </script>
+    <script src="dark-mode.js"></script>
 </body>
 </html> 

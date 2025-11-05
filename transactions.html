@@ -6,12 +6,16 @@
     <title>All Transactions - MoneyTracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body style="background: #f7fafd;">
-    <div class="transactions-page-container" style="max-width: 1400px; margin: 2.5rem auto; background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 2rem 1.5rem;">
+<body>
+    <div class="transactions-page-container">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h1 style="margin: 0; font-size: 2rem;">All Transactions</h1>
             <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="dark-mode-toggle" aria-label="Switch to dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <button onclick="toggleExportModal()" class="btn btn-primary" style="padding: 0.4rem 1.5rem; border-radius: 6px; font-size: 1rem; background: #ffb733; color: white; border: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 2px 12px rgba(255,183,51,0.2);">
                     <span style="margin-right: 0.5rem;">📊</span> Export to CSV
                 </button>
@@ -672,5 +676,6 @@
             toggleExportModal();
         }
     </script>
+    <script src="dark-mode.js"></script>
 </body>
 </html>
