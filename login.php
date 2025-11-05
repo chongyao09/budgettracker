@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     // Fetch user by email
-    $stmt = $conn->prepare('SELECT id, email, password_hash FROM users WHERE email = ?');
+    $stmt = $conn->prepare('SELECT id, email, password_hash, is_premium FROM users WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,10 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['email'] = $user['email'];
-            
+            $_SESSION['is_premium'] = isset($user['is_premium']) ? (bool)$user['is_premium'] : false;
+
             // Log successful login
             error_log("User logged in successfully. User ID: " . $user['id']);
-            
+
             if ($user['id'] == 1) {
                 header('Location: admin.html');
                 exit();
@@ -54,4 +55,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 $conn->close();
-?> 
+?>

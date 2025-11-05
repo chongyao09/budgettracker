@@ -848,21 +848,56 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Check premium status on load
             checkPremiumStatus();
-            
+
             // Subscribe button handler
             const subscribeBtn = document.getElementById('subscribeBtn');
-            subscribeBtn.addEventListener('click', handleSubscription);
-            
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', handleSubscription);
+            }
+
+            // Setup payment method handlers
+            setupPaymentMethodHandlers();
+
+            // Setup form input formatting
+            const cardNumberInput = document.getElementById('cardNumber');
+            const expiryInput = document.getElementById('expiryDate');
+            const cvvInput = document.getElementById('cvv');
+
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', () => formatCardNumber(cardNumberInput));
+            }
+            if (expiryInput) {
+                expiryInput.addEventListener('input', () => formatExpiryDate(expiryInput));
+            }
+            if (cvvInput) {
+                cvvInput.addEventListener('input', () => formatCVV(cvvInput));
+            }
+
+            // Payment form submission
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.addEventListener('submit', handlePaymentSubmission);
+
+            // Close modal buttons
+            document.getElementById('closeModalBtn').addEventListener('click', closePaymentModal);
+            document.getElementById('cancelPaymentBtn').addEventListener('click', closePaymentModal);
+
+            // Close modal on outside click
+            document.getElementById('paymentModal').addEventListener('click', (e) => {
+                if (e.target.id === 'paymentModal') {
+                    closePaymentModal();
+                }
+            });
+
             // Profile dropdown functionality
             const profileIcon = document.getElementById('profileIcon');
             const profileDropdown = document.getElementById('profileDropdown');
-            
+
             if (profileIcon && profileDropdown) {
                 profileIcon.addEventListener('click', (e) => {
                     e.stopPropagation();
                     profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
                 });
-                
+
                 document.addEventListener('click', (e) => {
                     if (profileDropdown.style.display === 'block') {
                         profileDropdown.style.display = 'none';
@@ -875,12 +910,16 @@
             try {
                 const response = await fetch('check-premium.php');
                 const data = await response.json();
-                
+
                 if (data.is_premium) {
-                    updateUIForPremium();
+                    // Redirect premium users to dashboard
+                    window.location.href = 'dashboard.html';
+                    return;
                 }
+                // Non-premium users stay on the page (no action needed)
             } catch (error) {
                 console.error('Error checking premium status:', error);
+                // On error, assume non-premium and stay on page
             }
         }
         
@@ -1058,67 +1097,8 @@
             document.getElementById('touchngoPaymentForm').style.display = 'none';
         }
         
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check premium status on load
-            checkPremiumStatus();
-            
-            // Subscribe button handler
-            const subscribeBtn = document.getElementById('subscribeBtn');
-            subscribeBtn.addEventListener('click', handleSubscription);
-            
-            // Setup payment method handlers
-            setupPaymentMethodHandlers();
-            
-            // Setup form input formatting
-            const cardNumberInput = document.getElementById('cardNumber');
-            const expiryInput = document.getElementById('expiryDate');
-            const cvvInput = document.getElementById('cvv');
-            
-            if (cardNumberInput) {
-                cardNumberInput.addEventListener('input', () => formatCardNumber(cardNumberInput));
-            }
-            if (expiryInput) {
-                expiryInput.addEventListener('input', () => formatExpiryDate(expiryInput));
-            }
-            if (cvvInput) {
-                cvvInput.addEventListener('input', () => formatCVV(cvvInput));
-            }
-            
-            // Payment form submission
-            const paymentForm = document.getElementById('paymentForm');
-            paymentForm.addEventListener('submit', handlePaymentSubmission);
-            
-            // Close modal buttons
-            document.getElementById('closeModalBtn').addEventListener('click', closePaymentModal);
-            document.getElementById('cancelPaymentBtn').addEventListener('click', closePaymentModal);
-            
-            // Close modal on outside click
-            document.getElementById('paymentModal').addEventListener('click', (e) => {
-                if (e.target.id === 'paymentModal') {
-                    closePaymentModal();
-                }
-            });
-            
-            // Profile dropdown functionality
-            const profileIcon = document.getElementById('profileIcon');
-            const profileDropdown = document.getElementById('profileDropdown');
-            
-            if (profileIcon && profileDropdown) {
-                profileIcon.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-                });
-                
-                document.addEventListener('click', (e) => {
-                    if (profileDropdown.style.display === 'block') {
-                        profileDropdown.style.display = 'none';
-                    }
-                });
-            }
-        });
+
     </script>
     <script src="dark-mode.js"></script>
 </body>
 </html>
-

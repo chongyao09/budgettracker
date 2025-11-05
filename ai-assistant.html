@@ -17,7 +17,7 @@
             <a href="dashboard.html">Dashboard</a>
             <a href="transactions.html">Transactions</a>
             <a href="#" class="active">AI Assistant</a>
-            <a href="premium.html">Premium</a>
+            <a href="premium.html" id="premiumNavLink">Premium</a>
         </nav>
     </aside>
     <main class="dashboard-main">
@@ -924,20 +924,37 @@
             document.getElementById('aiResults').style.display = 'none';
         }
         
+        // Check premium status and hide premium nav link for premium users
+        async function checkPremiumStatusForNav() {
+            try {
+                const response = await fetch('check-premium.php');
+                const data = await response.json();
+                if (data.is_premium) {
+                    const premiumNavLink = document.getElementById('premiumNavLink');
+                    if (premiumNavLink) {
+                        premiumNavLink.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking premium status for nav:', error);
+            }
+        }
+
         // Profile dropdown functionality
         document.addEventListener('DOMContentLoaded', () => {
             // Check premium status first
             checkPremiumStatus();
-            
+            checkPremiumStatusForNav();
+
             const profileIcon = document.getElementById('profileIcon');
             const profileDropdown = document.getElementById('profileDropdown');
-            
+
             if (profileIcon && profileDropdown) {
                 profileIcon.addEventListener('click', (e) => {
                     e.stopPropagation();
                     profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
                 });
-                
+
                 document.addEventListener('click', (e) => {
                     if (profileDropdown.style.display === 'block') {
                         profileDropdown.style.display = 'none';
