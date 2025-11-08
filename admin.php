@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
 
 // Database configuration
 $host = 'localhost';
-$db   = 'budgettracker';
+$db   = 'budgettracker_new';
 $user = 'root';
 $pass = '';
 
@@ -92,10 +92,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
         case 'delete_user':
             $user_id = intval($_POST['user_id']);
-            $stmt = $conn->prepare('DELETE FROM users WHERE id = ?');
-            $stmt->bind_param('i', $user_id);
-            $success = $stmt->execute();
-            echo json_encode(['success' => $success]);
+            
+            // Admin protection: Prevent deletion of main admin (user_id = 1)
+            if ($user_id == 1) {
+                echo json_encode([
+                    'success' => false, 
+                    'error' => 'Cannot delete the main administrator account'
+                ]);
+                break;
+            }
+            
+            // Check if user exists
+            $check_stmt = $conn->prepare('SELECT id, name FROM users WHERE id = ?');
+            $check_stmt->bind_param('i', $user_id);
+            $check_stmt->execute();
+            $user_result = $check_stmt->get_result();
+            
+            if ($user_result->num_rows === 0) {
+                echo json_encode(['success' => false, 'error' => 'User not found']);
+                break;
+            }
+            
+            $user_info = $user_result->fetch_assoc();
+            
+            // Begin transaction for cascading delete
+            $conn->begin_transaction();
+            
+            try {
+                // Delete related data in correct order (respecting foreign key constraints)
+                
+                // 1. Delete user's goals
+                $delete_goals = $conn->prepare('DELETE FROM budget_goals WHERE user_id = ?');
+                $delete_goals->bind_param('i', $user_id);
+                $delete_goals->execute();
+                
+                // 2. Delete user's transactions
+                $delete_transactions = $conn->prepare('DELETE FROM transactions WHERE user_id = ?');
+                $delete_transactions->bind_param('i', $user_id);
+                $delete_transactions->execute();
+                
+                // 3. Finally delete the user
+                $delete_user = $conn->prepare('DELETE FROM users WHERE id = ?');
+                $delete_user->bind_param('i', $user_id);
+                $delete_user->execute();
+                
+                // Commit transaction
+                $conn->commit();
+                
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'User "' . $user_info['name'] . '" and all related data have been deleted successfully'
+                ]);
+                
+            } catch (Exception $e) {
+                // Rollback on error
+                $conn->rollback();
+                echo json_encode([
+                    'success' => false, 
+                    'error' => 'Database error: ' . $e->getMessage()
+                ]);
+            }
             break;
     }
     
@@ -104,4 +160,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // For regular page load, serve the admin dashboard HTML
 include 'admin.html';
-?> 
+?>

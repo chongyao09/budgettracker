@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $host = 'localhost';
-$db   = 'budgettracker';
+$db   = 'budgettracker_new';
 $user = 'root';
 $pass = '';
 
@@ -89,4 +89,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
-?> 
+?>

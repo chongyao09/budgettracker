@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $host = 'localhost';
-$db   = 'budgettracker';
+$db   = 'budgettracker_new';
 $user = 'root';
 $pass = '';
 
@@ -65,4 +65,4 @@ $response = [
 
 echo json_encode($response);
 $stmt->close();
-$conn->close(); 
+$conn->close();

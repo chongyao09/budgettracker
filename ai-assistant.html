@@ -84,19 +84,35 @@
                             <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h3>Generate Budget Plan</h3>
-                    <p>Get a personalized budget plan based on your financial data and goals</p>
+                    <h3>Budget Planning</h3>
+                    <p>Get personalized budget plans tailored to different financial goals</p>
+                    <select class="ai-preset-select" id="budgetPresetSelect">
+                        <option value="balanced">Balanced Budget (50/30/20)</option>
+                        <option value="aggressive-savings">Aggressive Savings</option>
+                        <option value="debt-payoff">Debt Payoff Focus</option>
+                        <option value="retirement">Retirement Planning</option>
+                        <option value="emergency-fund">Emergency Fund Builder</option>
+                        <option value="investment">Investment Focused</option>
+                    </select>
                     <button class="ai-menu-btn" onclick="generateBudgetPlan()">Generate Plan</button>
                 </div>
-                
+
                 <div class="ai-menu-card" id="extraIdeaCard">
                     <div class="ai-menu-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="#ffa600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h3>Generate Extra Ideas</h3>
-                    <p>Discover creative ways to save money and increase your income</p>
+                    <h3>Money-Saving Ideas</h3>
+                    <p>Discover creative strategies to save money and boost income</p>
+                    <select class="ai-preset-select" id="ideasPresetSelect">
+                        <option value="quick-wins">Quick Savings Wins</option>
+                        <option value="long-term">Long-term Strategies</option>
+                        <option value="side-hustles">Side Hustle Ideas</option>
+                        <option value="lifestyle">Lifestyle Changes</option>
+                        <option value="investment">Smart Investments</option>
+                        <option value="tax-saving">Tax Optimization</option>
+                    </select>
                     <button class="ai-menu-btn" onclick="generateExtraIdeas()">Get Ideas</button>
                 </div>
             </div>
@@ -199,6 +215,50 @@
             background: linear-gradient(135deg, #ffb733, #ff8c00);
             transform: translateY(-2px);
         }
+
+        .ai-preset-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-tertiary);
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.2rem;
+            padding-right: 2.5rem;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .ai-preset-select:hover {
+            border-color: #ffa600;
+            background: var(--card-bg) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center no-repeat;
+            background-size: 1.2rem;
+        }
+
+        .ai-preset-select:focus {
+            outline: none;
+            border-color: #ffa600;
+            background: var(--card-bg) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center no-repeat;
+            background-size: 1.2rem;
+        }
+
+        .ai-preset-select option {
+            padding: 0.75rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
         
         .ai-results-section {
             background: #fff;
@@ -242,6 +302,8 @@
         .ai-results-content {
             color: #2c3e50;
             line-height: 1.8;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
         
         .ai-results-content h1, .ai-results-content h2, .ai-results-content h3, .ai-results-content h4 {
@@ -499,137 +561,167 @@
             color: var(--text-primary);
         }
         
-        [data-theme="dark"] .ai-results-content {
+        [data-theme="dark"] #aiResultsContent {
             color: var(--text-primary);
         }
-        
-        [data-theme="dark"] .ai-results-content h1,
-        [data-theme="dark"] .ai-results-content h2,
-        [data-theme="dark"] .ai-results-content h3,
-        [data-theme="dark"] .ai-results-content h4 {
+
+        [data-theme="dark"] #aiResultsContent h1,
+        [data-theme="dark"] #aiResultsContent h2,
+        [data-theme="dark"] #aiResultsContent h3,
+        [data-theme="dark"] #aiResultsContent h4 {
             color: var(--text-primary);
         }
-        
-        [data-theme="dark"] .ai-results-content h1 {
+
+        [data-theme="dark"] #aiResultsContent h1 {
             border-bottom-color: #ffa600;
             color: #ffa600;
         }
-        
-        [data-theme="dark"] .ai-results-content h2 {
+
+        [data-theme="dark"] #aiResultsContent h2 {
             color: #ffa600;
         }
-        
-        [data-theme="dark"] .ai-results-content h3 {
+
+        [data-theme="dark"] #aiResultsContent h3 {
             color: #4ade80;
         }
-        
-        [data-theme="dark"] .ai-results-content h4 {
+
+        [data-theme="dark"] #aiResultsContent h4 {
             color: #ffa600;
         }
-        
-        [data-theme="dark"] .ai-results-content p {
+
+        [data-theme="dark"] #aiResultsContent p {
             color: var(--text-primary);
         }
-        
-        [data-theme="dark"] .ai-results-content strong {
+
+        [data-theme="dark"] #aiResultsContent strong {
             color: #ffb733;
             background: rgba(255, 166, 0, 0.2);
             padding: 0.15rem 0.3rem;
             border-radius: 4px;
         }
-        
-        [data-theme="dark"] .ai-results-content ul,
-        [data-theme="dark"] .ai-results-content ol {
+
+        [data-theme="dark"] #aiResultsContent ul,
+        [data-theme="dark"] #aiResultsContent ol {
             color: var(--text-primary);
         }
-        
-        [data-theme="dark"] .ai-results-content li {
+
+        [data-theme="dark"] #aiResultsContent li {
             color: var(--text-primary);
             margin-bottom: 0.5rem;
         }
-        
-        [data-theme="dark"] .ai-results-content em {
+
+        [data-theme="dark"] #aiResultsContent em {
             color: var(--text-secondary);
         }
-        
-        [data-theme="dark"] .ai-results-content .highlight-box {
+
+        [data-theme="dark"] #aiResultsContent .highlight-box {
             background: var(--bg-tertiary);
             border-left-color: #ffa600;
         }
-        
-        [data-theme="dark"] .ai-results-content .action-steps {
+
+        [data-theme="dark"] #aiResultsContent .action-steps {
             background: rgba(46, 204, 113, 0.1);
             border-color: #2ecc71;
         }
-        
-        [data-theme="dark"] .ai-results-content .action-steps h4 {
+
+        [data-theme="dark"] #aiResultsContent .action-steps h4 {
             color: #4ade80;
         }
-        
-        [data-theme="dark"] .ai-results-content table {
+
+        [data-theme="dark"] #aiResultsContent table {
             background: var(--card-bg);
             box-shadow: 0 2px 8px var(--shadow-color);
             border: 1px solid var(--border-color);
         }
-        
-        [data-theme="dark"] .ai-results-content th {
+
+        [data-theme="dark"] #aiResultsContent th {
             background: linear-gradient(135deg, #ffa600, #ff8c00);
             color: white;
             font-weight: 700;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
-        
-        [data-theme="dark"] .ai-results-content td {
+
+        [data-theme="dark"] #aiResultsContent td {
             border-bottom-color: var(--border-color);
             color: var(--text-primary);
             background: var(--card-bg);
         }
-        
-        [data-theme="dark"] .ai-results-content tr:hover {
+
+        [data-theme="dark"] #aiResultsContent tr:hover {
             background: rgba(255, 166, 0, 0.1);
         }
-        
-        [data-theme="dark"] .ai-results-content td strong {
+
+        [data-theme="dark"] #aiResultsContent td strong {
             background: transparent;
             padding: 0;
             color: #ffb733;
         }
-        
-        [data-theme="dark"] .ai-results-content .success-box {
+
+        [data-theme="dark"] #aiResultsContent .success-box {
             background: rgba(46, 204, 113, 0.15);
             border-color: #2ecc71;
             color: #4ade80;
         }
-        
-        [data-theme="dark"] .ai-results-content .warning-box {
+
+        [data-theme="dark"] #aiResultsContent .warning-box {
             background: rgba(255, 166, 0, 0.15);
             border-color: #ffa600;
             color: #ffb733;
         }
-        
-        [data-theme="dark"] .ai-results-content .info-box {
+
+        [data-theme="dark"] #aiResultsContent .info-box {
             background: rgba(13, 110, 253, 0.15);
             border-color: #0d6efd;
             color: #6ea8fe;
         }
-        
-        [data-theme="dark"] .ai-results-content .tip {
+
+        [data-theme="dark"] #aiResultsContent .tip {
             background: rgba(0, 123, 255, 0.1);
             border-left-color: #007bff;
         }
-        
-        [data-theme="dark"] .ai-results-content .progress-bar {
+
+        [data-theme="dark"] #aiResultsContent .progress-bar {
             background: var(--bg-tertiary);
         }
-        
-        [data-theme="dark"] .ai-results-content .metric-card {
+
+        [data-theme="dark"] #aiResultsContent .metric-card {
             background: var(--card-bg);
             border-color: var(--border-color);
             box-shadow: 0 2px 4px var(--shadow-color);
         }
-        
-        [data-theme="dark"] .ai-results-content .metric-label {
+
+        [data-theme="dark"] #aiResultsContent .metric-label {
             color: var(--text-secondary);
+        }
+
+        /* Additional dark mode styles for AI response content */
+        [data-theme="dark"] #aiResultsContent .budget-summary {
+            background: linear-gradient(135deg, #ffa600, #ffb733);
+            color: white;
+        }
+
+        [data-theme="dark"] #aiResultsContent .budget-summary h3 {
+            color: white;
+        }
+
+        /* Ensure all HTML content in AI response is dark mode compatible */
+        [data-theme="dark"] #aiResultsContent .ai-response-content {
+            background: transparent !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] #aiResultsContent .ai-response-content * {
+            color: inherit !important;
+        }
+
+        [data-theme="dark"] #aiResultsContent .ai-response-content html {
+            background: transparent !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] #aiResultsContent .ai-response-content body {
+            background: transparent !important;
+            color: var(--text-primary) !important;
         }
         
         [data-theme="dark"] .ai-loading {
@@ -758,6 +850,34 @@
         [data-theme="dark"] .paywall-feature {
             color: var(--text-primary);
         }
+
+        /* Dark Mode Styles for AI Preset Select Dropdowns */
+        [data-theme="dark"] .ai-preset-select {
+            background: var(--bg-tertiary) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center no-repeat;
+            background-size: 1.2rem;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        [data-theme="dark"] .ai-preset-select:hover {
+            background: var(--card-bg) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center no-repeat;
+            background-size: 1.2rem;
+            border-color: #ffa600;
+            box-shadow: 0 4px 12px rgba(255, 166, 0, 0.15);
+        }
+
+        [data-theme="dark"] .ai-preset-select:focus {
+            background: var(--card-bg) url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffa600' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") right 0.75rem center no-repeat;
+            background-size: 1.2rem;
+            border-color: #ffa600;
+            box-shadow: 0 0 0 4px rgba(255, 166, 0, 0.2), 0 8px 20px rgba(255, 166, 0, 0.15);
+        }
+
+        [data-theme="dark"] .ai-preset-select option {
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
     </style>
     
     <script>
@@ -813,10 +933,12 @@
                 window.location.href = 'premium.html';
                 return;
             }
-            
+
             showLoading();
             await loadUserData();
-            
+
+            const selectedPreset = document.getElementById('budgetPresetSelect').value;
+
             try {
                 const response = await fetch('ai-assistant.php', {
                     method: 'POST',
@@ -825,6 +947,7 @@
                     },
                     body: JSON.stringify({
                         action: 'generate_budget_plan',
+                        preset: selectedPreset,
                         user_data: {
                             transactions: userTransactions,
                             total_income: calculateTotalIncome(),
@@ -833,15 +956,21 @@
                         }
                     })
                 });
-                
+
                 const result = await response.json();
-                
+
+                if (result.success === false) {
+                    console.error('API Error:', result.error);
+                    displayResults('Sorry, there was an error processing your request: ' + (result.error || 'Unknown error'));
+                    return;
+                }
+
                 if (result.error && result.error === 'Premium subscription required') {
                     alert(result.message || 'Premium subscription required');
                     window.location.href = 'premium.html';
                     return;
                 }
-                
+
                 displayResults(result.response);
             } catch (error) {
                 console.error('Error generating budget plan:', error);
@@ -856,10 +985,12 @@
                 window.location.href = 'premium.html';
                 return;
             }
-            
+
             showLoading();
             await loadUserData();
-            
+
+            const selectedPreset = document.getElementById('ideasPresetSelect').value;
+
             try {
                 const response = await fetch('ai-assistant.php', {
                     method: 'POST',
@@ -868,6 +999,7 @@
                     },
                     body: JSON.stringify({
                         action: 'generate_extra_ideas',
+                        preset: selectedPreset,
                         user_data: {
                             transactions: userTransactions,
                             total_income: calculateTotalIncome(),
@@ -876,15 +1008,21 @@
                         }
                     })
                 });
-                
+
                 const result = await response.json();
-                
+
+                if (result.success === false) {
+                    console.error('API Error:', result.error);
+                    displayResults('Sorry, there was an error processing your request: ' + (result.error || 'Unknown error'));
+                    return;
+                }
+
                 if (result.error && result.error === 'Premium subscription required') {
                     alert(result.message || 'Premium subscription required');
                     window.location.href = 'premium.html';
                     return;
                 }
-                
+
                 displayResults(result.response);
             } catch (error) {
                 console.error('Error generating extra ideas:', error);

@@ -1,7 +1,7 @@
 <?php
 // Database config
 $host = 'localhost';
-$db   = 'budgettracker';
+$db   = 'budgettracker_new';
 $user = 'root';
 $pass = '';
 
@@ -43,4 +43,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 $conn->close();
-?> 
+?>

@@ -2,7 +2,7 @@
 session_start();
 // Database config
 $host = 'localhost';
-$db   = 'budgettracker';
+$db   = 'budgettracker_new';
 $user = 'root';
 $pass = '';
 

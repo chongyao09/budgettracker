@@ -37,9 +37,15 @@
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
     background: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 .main-container {
@@ -874,6 +880,7 @@ footer {
     background: #fffbe6;
     border-left: 4px solid #ffa600;
     opacity: 1;
+    color: #ffa600;
 }
 .dashboard-main {
     margin-left: 220px;

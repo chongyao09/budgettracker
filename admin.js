@@ -100,7 +100,16 @@ function loadUsers() {
 }
 
 function deleteUser(userId) {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+    // Enhanced confirmation dialog with detailed warning
+    const confirmMessage = '⚠️ WARNING: This will permanently delete the user and ALL their related data including:\n\n' +
+                          '• User profile and account information\n' +
+                          '• All transactions (income/expenses)\n' +
+                          '• All goals and financial targets\n' +
+                          '• This action CANNOT be undone!\n\n' +
+                          'Are you absolutely sure you want to proceed?';
+    
+    if (!confirm(confirmMessage)) return;
+    
     fetch('admin.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -109,14 +118,17 @@ function deleteUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            loadUsers();
+            // Show success message with details
+            alert('✅ Success! ' + (data.message || 'User deleted successfully'));
+            loadUsers(); // Reload the table
         } else {
-            alert('Error deleting user: ' + (data.error || 'Unknown error'));
+            // Show specific error message
+            alert('❌ Error: ' + (data.error || 'Failed to delete user'));
         }
     })
     .catch(error => {
-        alert('Error deleting user.');
         console.error('Error:', error);
+        alert('❌ Network error: Unable to delete user. Please try again.');
     });
 }
 
@@ -127,4 +139,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Refresh stats every 5 minutes
     setInterval(loadStats, 300000);
-}); 
+});

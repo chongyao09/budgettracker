@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$db = 'budgettracker';
+$db = 'budgettracker_new';
 
 // Create connection
 $conn = new mysqli($host, $user, $pass, $db);

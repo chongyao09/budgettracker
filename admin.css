@@ -295,6 +295,24 @@
     color: white;
 }
 
+.premium-active {
+    background: var(--success-color);
+    color: white;
+}
+
+.premium-active:hover {
+    background: #27ae60;
+}
+
+.premium-inactive {
+    background: var(--danger-color);
+    color: white;
+}
+
+.premium-inactive:hover {
+    background: #c0392b;
+}
+
 /* Responsive Design */
 @media (max-width: 900px) {
     .sidebar {
@@ -334,4 +352,4 @@
         display: block;
         overflow-x: auto;
     }
-} 
+}
